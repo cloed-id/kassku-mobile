@@ -1,0 +1,5 @@
+bricks:
+  transtrack_mobile_template:
+    git:
+      url: https://github.com/TransTRACK-ID/MOBILE-TEMPLATE
+      path: .
