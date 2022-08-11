@@ -39,8 +39,8 @@ class TransactionsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    children: [
-                      const Text(
+                    children: const [
+                      Text(
                         'Kassku Mobile',
                         style: TextStyle(
                           color: ColorName.white,
@@ -48,52 +48,73 @@ class TransactionsScreen extends StatelessWidget {
                           fontSize: 18,
                         ),
                       ),
-                      const Spacer(),
-                      IconButton(
-                        color: ColorName.white,
-                        onPressed: () {
-                          final workspaceBloc = context.read<WorkspacesBloc>();
-                          BlocProvider.value(
-                            value: workspaceBloc,
-                            child: const _FormWorkspaceDialog(),
-                          ).showCustomDialog<void>(context);
-                        },
-                        icon: const Icon(Icons.add),
+                      Spacer(),
+                      Text(
+                        'v1.0.0',
+                        style: TextStyle(color: ColorName.white),
                       )
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const Spacer(),
                   BlocBuilder<WorkspacesBloc, WorkspacesState>(
                     builder: (context, state) {
                       if (state is WorkspacesLoaded) {
                         if (state.workspaces.isEmpty) return const SizedBox();
 
-                        return DropdownButton<Workspace>(
-                          value: state.selected,
-                          style: const TextStyle(
-                            color: ColorName.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          isExpanded: true,
-                          dropdownColor: ColorName.primaryVariant,
-                          underline: const SizedBox(),
-                          items: state.workspaces
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(e.name.capitalize),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  'Area Kerja',
+                                  style: TextStyle(color: ColorName.white),
                                 ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            if (value == null) {
-                              return;
-                            }
+                                const SizedBox(width: 4),
+                                InkWell(
+                                  child: const Icon(
+                                    Icons.add,
+                                    color: ColorName.white,
+                                  ),
+                                  onTap: () {
+                                    final workspaceBloc =
+                                        context.read<WorkspacesBloc>();
+                                    BlocProvider.value(
+                                      value: workspaceBloc,
+                                      child: const _FormWorkspaceDialog(),
+                                    ).showCustomDialog<void>(context);
+                                  },
+                                )
+                              ],
+                            ),
+                            DropdownButton<Workspace>(
+                              value: state.selected,
+                              style: const TextStyle(
+                                color: ColorName.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              isExpanded: true,
+                              dropdownColor: ColorName.primaryVariant,
+                              underline: const SizedBox(),
+                              items: state.workspaces
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: _DropdownItem(e: e),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) {
+                                if (value == null) {
+                                  return;
+                                }
 
-                            context
-                                .read<WorkspacesBloc>()
-                                .add(SelectWorkspace(workspace: value));
-                          },
+                                context
+                                    .read<WorkspacesBloc>()
+                                    .add(SelectWorkspace(workspace: value));
+                              },
+                            ),
+                          ],
                         );
                       } else if (state is WorkspacesError) {
                         return Text(
@@ -199,6 +220,54 @@ class TransactionsScreen extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         },
+      ),
+    );
+  }
+}
+
+class _DropdownItem extends StatelessWidget {
+  const _DropdownItem({super.key, required this.e});
+
+  final Workspace e;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: SizedBox(
+        width: double.infinity,
+        child: Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(e.name.capitalize),
+                if (e.balance != null)
+                  Text(
+                    'Saldo: ${currencyFormatterNoLeading.format(e.balance)}',
+                    style: const TextStyle(
+                      color: ColorName.white,
+                      fontSize: 11,
+                    ),
+                  ),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.people,
+                  color: ColorName.white,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  e.members.length.toString(),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
