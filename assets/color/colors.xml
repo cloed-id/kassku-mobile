@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#7E64ED</color>
-    <color name="primary_variant">#8D74F7</color>
+    <color name="primary">#244C66</color>
+    <color name="primary_container">#587B89</color>
+
+    <color name="secondary">#407D6C</color>
+    <color name="secondary_container">#7DB290</color>
 
     <color name="warning">#F0CD4D</color>
 
-    <color name="info">#0094BC</color>
+    <color name="info">#244C66</color>
     <color name="info_variant">#B2EFFF</color>
     <color name="info_secondary">#E6F4F8</color>
 

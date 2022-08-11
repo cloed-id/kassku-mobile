@@ -118,7 +118,7 @@ class _FormTransactionBodyDialogState
                         ),
                       ),
                       selected: state == TransactionType.income,
-                      selectedColor: ColorName.primaryVariant,
+                      selectedColor: ColorName.primary,
                       onSelected: (selected) {
                         if (selected) {
                           context
@@ -138,7 +138,7 @@ class _FormTransactionBodyDialogState
                         ),
                       ),
                       selected: state == TransactionType.expense,
-                      selectedColor: ColorName.primaryVariant,
+                      selectedColor: ColorName.primary,
                       onSelected: (selected) {
                         if (selected) {
                           context
@@ -334,7 +334,7 @@ class _AddingCategoryWidget extends StatelessWidget {
             .read<_IsAddingCategoryCubit>()
             .changeIsAddingCategory(isAdding: true);
       },
-      backgroundColor: ColorName.primaryVariant.withOpacity(0.5),
+      backgroundColor: ColorName.primary.withOpacity(0.5),
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: const [
@@ -370,7 +370,7 @@ class _CategoryChip extends StatelessWidget {
         ),
       ),
       selected: category.isSelected,
-      selectedColor: ColorName.primaryVariant,
+      selectedColor: ColorName.primary,
       onSelected: (selected) {
         category.isSelected = selected;
         context.read<CategoriesBloc>().add(SelectCategory(category));

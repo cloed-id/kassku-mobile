@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
+import 'package:kassku_mobile/helpers/navigation_helper.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/category.dart';
+import 'package:kassku_mobile/models/member_workspace.dart';
 import 'package:kassku_mobile/models/transaction.dart';
 import 'package:kassku_mobile/models/workspace.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/categories_bloc.dart';
@@ -15,9 +17,11 @@ import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 import 'package:kassku_mobile/utils/extensions/widget_extension.dart';
 import 'package:kassku_mobile/utils/functions.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 part 'package:kassku_mobile/modules/transactions/view/widgets/form_workspace_dialog.dart';
 part 'package:kassku_mobile/modules/transactions/view/widgets/form_transaction_dialog.dart';
+part 'package:kassku_mobile/modules/transactions/view/widgets/list_member_dialog.dart';
 
 class TransactionsScreen extends StatelessWidget {
   const TransactionsScreen({super.key});
@@ -26,7 +30,50 @@ class TransactionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transactions'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Transaksi Anda'),
+            BlocBuilder<WorkspacesBloc, WorkspacesState>(
+              builder: (context, state) {
+                if (state is WorkspacesLoaded &&
+                    state.selected != null &&
+                    state.selected!.balance != null) {
+                  return Text(
+                    // ignore: lines_longer_than_80_chars
+                    'Saldo: ${currencyFormatterNoLeading.format(state.selected!.balance)}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                }
+
+                return const SizedBox();
+              },
+            ),
+          ],
+        ),
+        actions: [
+          BlocBuilder<WorkspacesBloc, WorkspacesState>(
+            builder: (context, state) {
+              if (state is WorkspacesLoaded && state.selected != null) {
+                return IconButton(
+                  icon: const Icon(Icons.people),
+                  onPressed: () {
+                    _ListMemberDialog(
+                      members: state.selected!.members,
+                      workspace: state.selected!,
+                    ).showCustomDialog<void>(context);
+                  },
+                );
+              }
+
+              return const SizedBox();
+            },
+          ),
+          IconButton(icon: const Icon(Icons.list_alt), onPressed: () {}),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -39,8 +86,8 @@ class TransactionsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Kassku Mobile',
                         style: TextStyle(
                           color: ColorName.white,
@@ -48,10 +95,19 @@ class TransactionsScreen extends StatelessWidget {
                           fontSize: 18,
                         ),
                       ),
-                      Spacer(),
-                      Text(
-                        'v1.0.0',
-                        style: TextStyle(color: ColorName.white),
+                      const Spacer(),
+                      FutureBuilder<PackageInfo>(
+                        future: PackageInfo.fromPlatform(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                              'v${snapshot.data!.version}',
+                              style: const TextStyle(color: ColorName.white),
+                            );
+                          }
+
+                          return const SizedBox();
+                        },
                       )
                     ],
                   ),
@@ -94,7 +150,7 @@ class TransactionsScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                               isExpanded: true,
-                              dropdownColor: ColorName.primaryVariant,
+                              dropdownColor: ColorName.secondary,
                               underline: const SizedBox(),
                               items: state.workspaces
                                   .map(
@@ -132,12 +188,6 @@ class TransactionsScreen extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: const Text('Transactions'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
               title: const Text('Logout'),
               onTap: () {
                 GetIt.I<UserHelper>().logout();
@@ -160,7 +210,7 @@ class TransactionsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'No Workspace, ',
+                      'Tidak ada area kerja,',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -174,7 +224,7 @@ class TransactionsScreen extends StatelessWidget {
                           child: const _FormWorkspaceDialog(),
                         ).showCustomDialog<void>(context);
                       },
-                      child: const Text('please create one'),
+                      child: const Text('silahkan buat'),
                     )
                   ],
                 ),
@@ -253,16 +303,29 @@ class _DropdownItem extends StatelessWidget {
                   ),
               ],
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Icon(
-                  Icons.people,
-                  color: ColorName.white,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  e.members.length.toString(),
+                if (e.role != null)
+                  Text(
+                    e.role!.capitalize,
+                    style: const TextStyle(
+                      color: ColorName.white,
+                      fontSize: 11,
+                    ),
+                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.people,
+                      color: ColorName.white,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      e.members.length.toString(),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -312,7 +375,7 @@ class _TransactionsList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'No Transactions, ',
+                'Tidak ada transaksi,',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -320,7 +383,7 @@ class _TransactionsList extends StatelessWidget {
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () => _openTrxDialog(context),
-                child: const Text('please create one'),
+                child: const Text('silahkan buat'),
               )
             ],
           ),
@@ -340,8 +403,12 @@ class _TransactionsList extends StatelessWidget {
             right: 16,
             bottom: 16,
             child: FloatingActionButton(
+              backgroundColor: ColorName.secondaryContainer,
               onPressed: () => _openTrxDialog(context),
-              child: const Icon(Icons.add),
+              child: const Icon(
+                Icons.add,
+                color: ColorName.white,
+              ),
             ),
           ),
         ],
@@ -364,8 +431,12 @@ class _TransactionItem extends StatelessWidget {
     return ListTile(
       leading: Icon(
         transaction.type == TransactionType.income
-            ? Icons.arrow_circle_up
-            : Icons.arrow_circle_down,
+            ? Icons.arrow_drop_up_rounded
+            : Icons.arrow_drop_down_rounded,
+        size: 52,
+        color: transaction.type == TransactionType.income
+            ? ColorName.success
+            : ColorName.errorForeground,
       ),
       title: Text(transaction.categoryName.capitalize),
       subtitle: Text(transaction.description.capitalize),

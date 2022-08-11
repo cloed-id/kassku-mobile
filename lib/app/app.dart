@@ -34,9 +34,9 @@ class _AppState extends State<App> {
   final ColorScheme _colorSchemeLight = const ColorScheme(
     brightness: Brightness.light,
     primary: ColorName.primary,
-    primaryContainer: ColorName.primaryVariant,
-    secondary: ColorName.infoSecondary,
-    secondaryContainer: ColorName.infoVariant,
+    primaryContainer: ColorName.primaryContainer,
+    secondary: ColorName.secondary,
+    secondaryContainer: ColorName.secondaryContainer,
     background: ColorName.background,
     error: ColorName.errorBackground,
     surface: ColorName.white,

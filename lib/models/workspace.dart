@@ -16,6 +16,7 @@ class Workspace {
     this.members,
     this.memberWorkspaceId,
     this.balance,
+    this.role,
   );
 
   factory Workspace.fromJson(Map<String, dynamic> json) =>
@@ -43,4 +44,6 @@ class Workspace {
   final String memberWorkspaceId;
 
   final num? balance;
+
+  final String? role;
 }

@@ -70,5 +70,8 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     final data = result.data as Category;
 
     emit(CategoriesLoaded([data, ...state.categories]));
+
+    data.isSelected = true;
+    add(SelectCategory(data));
   }
 }

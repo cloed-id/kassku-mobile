@@ -18,6 +18,7 @@ Workspace _$WorkspaceFromJson(Map<String, dynamic> json) => Workspace(
           .toList(),
       json['member_workspace_id'] as String,
       json['balance'] as num?,
+      json['role'] as String?,
     );
 
 Map<String, dynamic> _$WorkspaceToJson(Workspace instance) => <String, dynamic>{
@@ -30,4 +31,5 @@ Map<String, dynamic> _$WorkspaceToJson(Workspace instance) => <String, dynamic>{
       'members': instance.members.map((e) => e.toJson()).toList(),
       'member_workspace_id': instance.memberWorkspaceId,
       'balance': instance.balance,
+      'role': instance.role,
     };

@@ -44,6 +44,7 @@ dependencies:
   hive_flutter: ^1.1.0
   logger: ^1.1.0
   modal_bottom_sheet: ^2.1.0
+  package_info_plus: ^1.4.3+1
   retry: ^3.1.0
   url_launcher: ^6.1.5
 
@@ -176,7 +177,6 @@ flutter:
     - assets/icons/
     - assets/translations/
     - assets/fonts/
-
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
