@@ -37,4 +37,13 @@ class WorkspacesRepository extends BaseRepository {
 
     return BaseResponse.success(workspace);
   }
+
+  Future<BaseResponse<Workspace>> getWorkspaceByMemberId(
+    String memberId,
+  ) async {
+    final response = await get('${ApiEndPoint.kApiWorkspaces}/$memberId');
+    final result = responseWrapper<MapString, MapString>(response);
+    final workspace = Workspace.fromJson(result);
+    return BaseResponse.success(workspace);
+  }
 }

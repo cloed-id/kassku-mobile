@@ -30,3 +30,12 @@ class SelectWorkspace extends WorkspacesEvent {
   @override
   List<Object> get props => [workspace];
 }
+
+class FetchWorkspace extends WorkspacesEvent {
+  const FetchWorkspace({required this.memberId});
+  
+  final String memberId;
+
+  @override
+  List<Object> get props => [memberId];
+}

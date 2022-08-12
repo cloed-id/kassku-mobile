@@ -15,9 +15,31 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
     on<FetchWorkspaces>(_searchWorkspaces);
     on<CreateWorkspace>(_createWorkspace);
     on<SelectWorkspace>(_selectWorkspace);
+    on<FetchWorkspace>(_fetchWorkspace);
   }
 
   final _repo = WorkspacesRepository();
+
+  Future<void> _fetchWorkspace(
+    FetchWorkspace event,
+    Emitter<WorkspacesState> emit,
+  ) async {
+    emit(WorkspacesLoading(state));
+    final result = await ErrorWrapper.asyncGuard(
+      () => _repo.getWorkspaceByMemberId(event.memberId),
+      onError: (_) {
+        emit(WorkspacesError(state, 'Kesalahan mendapatkan data'));
+      },
+    );
+
+    final data = result.data as Workspace;
+
+    final workspaces = state.workspaces;
+    final index = workspaces.indexWhere((w) => w.id == data.id);
+    workspaces[index] = data;
+
+    emit(WorkspacesLoaded(workspaces, data));
+  }
 
   void _selectWorkspace(
     SelectWorkspace event,

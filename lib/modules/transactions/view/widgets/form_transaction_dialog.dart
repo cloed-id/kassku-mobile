@@ -85,6 +85,16 @@ class _FormTransactionBodyDialogState
     return BlocListener<TransactionsBloc, TransactionsState>(
       listener: (context, state) {
         if (state is TransactionsCreated) {
+          final workspace =
+              BlocProvider.of<WorkspacesBloc>(context).state.selected;
+
+          if (workspace == null) {
+            GetIt.I<FlashMessageHelper>().showError('Terjadi kesalahan');
+            return;
+          }
+          context
+              .read<WorkspacesBloc>()
+              .add(FetchWorkspace(memberId: workspace.memberWorkspaceId));
           Navigator.of(context).pop();
         }
       },
