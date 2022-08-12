@@ -54,26 +54,6 @@ class TransactionsScreen extends StatelessWidget {
             ),
           ],
         ),
-        actions: [
-          BlocBuilder<WorkspacesBloc, WorkspacesState>(
-            builder: (context, state) {
-              if (state is WorkspacesLoaded && state.selected != null) {
-                return IconButton(
-                  icon: const Icon(Icons.people),
-                  onPressed: () {
-                    _ListMemberDialog(
-                      members: state.selected!.members,
-                      workspace: state.selected!,
-                    ).showCustomDialog<void>(context);
-                  },
-                );
-              }
-
-              return const SizedBox();
-            },
-          ),
-          IconButton(icon: const Icon(Icons.list_alt), onPressed: () {}),
-        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -187,7 +167,30 @@ class TransactionsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            BlocBuilder<WorkspacesBloc, WorkspacesState>(
+              builder: (context, state) {
+                if (state is WorkspacesLoaded && state.selected != null) {
+                  return ListTile(
+                    leading: const Icon(Icons.people),
+                    title: const Text('Anggota'),
+                    onTap: () {
+                      _ListMemberDialog(
+                        members: state.selected!.members,
+                        workspace: state.selected!,
+                      ).showSheet<void>(context);
+                    },
+                  );
+                }
+                return const SizedBox();
+              },
+            ),
             ListTile(
+              leading: const Icon(Icons.list_alt),
+              title: const Text('Transaksi Anggota'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
                 GetIt.I<UserHelper>().logout();
