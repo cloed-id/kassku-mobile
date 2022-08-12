@@ -61,6 +61,14 @@ class TransactionsScreen extends StatelessWidget {
             DrawerHeader(
               decoration: const BoxDecoration(
                 color: ColorName.primary,
+                backgroundBlendMode: BlendMode.darken,
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://picsum.photos/250',
+                  ),
+                  opacity: 0.3,
+                  fit: BoxFit.cover,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -73,9 +73,42 @@ class _AppBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppCubit>().state;
+    final theme = ThemeData(
+      colorScheme: colorScheme,
+      primaryColor: colorScheme.primary,
+      backgroundColor: colorScheme.background,
+      textTheme: GoogleFonts.openSansTextTheme(
+        const TextTheme(
+          subtitle1: TextStyle(
+            color: ColorName.textPrimary,
+          ),
+          subtitle2: TextStyle(
+            color: ColorName.textSecondary,
+          ),
+          headline5: TextStyle(
+            color: ColorName.textPrimary,
+          ),
+          headline6: TextStyle(
+            color: ColorName.textPrimary,
+          ),
+          bodyText2: TextStyle(
+            color: ColorName.textPrimary,
+          ),
+          bodyText1: TextStyle(
+            color: ColorName.textSecondary,
+          ),
+        ),
+      ),
+      buttonTheme: ButtonThemeData(
+        textTheme: ButtonTextTheme.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+    );
 
     if (state is AppLoading) {
-      return const MaterialApp(home: SplashPage());
+      return MaterialApp(theme: theme, home: const SplashPage());
     }
 
     final appRouter = GetIt.I<NavigationHelper>().goRouter;
@@ -88,39 +121,7 @@ class _AppBody extends StatelessWidget {
       routeInformationProvider: appRouter.routeInformationProvider,
       routeInformationParser: appRouter.routeInformationParser,
       routerDelegate: appRouter.routerDelegate,
-      theme: ThemeData(
-        colorScheme: colorScheme,
-        primaryColor: colorScheme.primary,
-        backgroundColor: colorScheme.background,
-        textTheme: GoogleFonts.openSansTextTheme(
-          const TextTheme(
-            subtitle1: TextStyle(
-              color: ColorName.textPrimary,
-            ),
-            subtitle2: TextStyle(
-              color: ColorName.textSecondary,
-            ),
-            headline5: TextStyle(
-              color: ColorName.textPrimary,
-            ),
-            headline6: TextStyle(
-              color: ColorName.textPrimary,
-            ),
-            bodyText2: TextStyle(
-              color: ColorName.textPrimary,
-            ),
-            bodyText1: TextStyle(
-              color: ColorName.textSecondary,
-            ),
-          ),
-        ),
-        buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-      ),
+      theme: theme,
     );
   }
 }
