@@ -5,12 +5,8 @@ part 'category.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Category {
-  Category(
-    this.id,
-    this.textContent,
-    this.createdAt,
-    this.updatedAt,
-  );
+  Category(this.id, this.textContent, this.createdAt, this.updatedAt,
+      this.usedCount);
 
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
@@ -30,4 +26,7 @@ class Category {
 
   @JsonKey(ignore: true)
   bool isSelected = false;
+
+  @JsonKey(name: 'used_count')
+  final int usedCount;
 }

@@ -83,33 +83,38 @@ class TransactionsListWidget extends StatelessWidget {
         );
       }
 
+      final list = Scrollbar(
+        thumbVisibility: true,
+        trackVisibility: true,
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          itemCount: transactions.length,
+          itemBuilder: (context, index) => _TransactionItem(
+            transaction: transactions[index],
+            isWorkspaceTransaction: isWorkspaceTransactions,
+          ),
+        ),
+      );
+
       return Stack(
         children: [
-          RefreshIndicator(
-            onRefresh: () async {
-              context.read<TransactionsBloc>().add(
-                    FetchTransactions(
-                      workspaceId,
-                      memberWorkspaceId,
-                      key: '',
-                    ),
-                  );
-            },
-            child: Scrollbar(
-              thumbVisibility: true,
-              trackVisibility: true,
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
-                itemCount: transactions.length,
-                itemBuilder: (context, index) => _TransactionItem(
-                  transaction: transactions[index],
-                  isWorkspaceTransaction: isWorkspaceTransactions,
-                ),
-              ),
-            ),
-          ),
+          if (!isWorkspaceTransactions)
+            RefreshIndicator(
+              onRefresh: () async {
+                context.read<TransactionsBloc>().add(
+                      FetchTransactions(
+                        workspaceId,
+                        memberWorkspaceId,
+                        key: '',
+                      ),
+                    );
+              },
+              child: list,
+            )
+          else
+            list,
           if (!isWorkspaceTransactions)
             Positioned(
               right: 16,

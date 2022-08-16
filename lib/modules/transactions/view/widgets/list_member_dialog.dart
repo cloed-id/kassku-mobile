@@ -27,6 +27,7 @@ class _ListMemberDialog extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ListView.builder(
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             itemCount: members.length,
             itemBuilder: (context, index) {

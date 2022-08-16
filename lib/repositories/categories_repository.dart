@@ -4,6 +4,8 @@ import 'package:kassku_mobile/models/base_response.dart';
 import 'package:kassku_mobile/models/category.dart';
 import 'package:kassku_mobile/repositories/base_repository.dart';
 import 'package:kassku_mobile/utils/constants.dart';
+import 'package:kassku_mobile/utils/enums.dart';
+import 'package:kassku_mobile/utils/exceptions.dart';
 import 'package:kassku_mobile/utils/typedefs.dart';
 
 class CategoriesRepository extends BaseRepository {
@@ -46,5 +48,20 @@ class CategoriesRepository extends BaseRepository {
     final workspace = Category.fromJson(result);
 
     return BaseResponse.success(workspace);
+  }
+
+  Future<void> deleteCategory(
+    String categoryId,
+    String workspaceId,
+  ) async {
+    final response = await delete(
+      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiCategories}/$categoryId',
+    );
+
+    if (response.status == ResponseStatus.success) {
+      return;
+    }
+
+    throw CustomExceptionString(response.message ?? 'Unknown error');
   }
 }

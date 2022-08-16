@@ -14,10 +14,30 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<FetchCategories>(_searchCategories);
     on<CreateCategory>(_createCategory);
     on<SelectCategory>(_selectCategory);
+    on<DeleteCategory>(_deleteCategory);
   }
 
   final _repo = CategoriesRepository();
   final String workspaceId;
+
+  Future<void> _deleteCategory(
+    DeleteCategory event,
+    Emitter<CategoriesState> emit,
+  ) async {
+    emit(CategoriesLoading(state));
+    await ErrorWrapper.asyncGuard(
+      () => _repo.deleteCategory(event.category.id, workspaceId),
+      onError: (_) {
+        emit(CategoriesLoaded(state.categories));
+      },
+    );
+
+    final categories = state.categories
+        .where((category) => category.id != event.category.id)
+        .toList();
+
+    emit(CategoriesLoaded(categories));
+  }
 
   Future<void> _selectCategory(
     SelectCategory event,

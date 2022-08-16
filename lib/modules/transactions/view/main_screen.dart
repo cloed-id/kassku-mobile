@@ -11,6 +11,7 @@ import 'package:kassku_mobile/models/workspace.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/categories_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/transactions_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
+import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
@@ -173,6 +174,24 @@ class MainScreen extends StatelessWidget {
                   )
                 ],
               ),
+            ),
+            BlocBuilder<WorkspacesBloc, WorkspacesState>(
+              builder: (context, state) {
+                if (state is WorkspacesLoaded && state.selected != null) {
+                  if (state.selected!.role == 'admin') {
+                    return ListTile(
+                      leading: const Icon(Icons.category),
+                      title: const Text('Kategori'),
+                      onTap: () {
+                        CategoryListWidget(
+                          workspaceId: state.selected!.id,
+                        ).showSheet<void>(context);
+                      },
+                    );
+                  }
+                }
+                return const SizedBox();
+              },
             ),
             BlocBuilder<WorkspacesBloc, WorkspacesState>(
               builder: (context, state) {
