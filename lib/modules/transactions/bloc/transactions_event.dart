@@ -3,7 +3,7 @@ part of 'transactions_bloc.dart';
 abstract class TransactionsEvent extends Equatable {
   const TransactionsEvent(this.workspaceId, this.memberWorkspaceId);
   final String workspaceId;
-  final String memberWorkspaceId;
+  final String? memberWorkspaceId;
 }
 
 class FetchTransactions extends TransactionsEvent {

@@ -1,4 +1,4 @@
-part of 'package:kassku_mobile/modules/transactions/view/transactions_screen.dart';
+part of 'package:kassku_mobile/modules/transactions/view/main_screen.dart';
 
 class _ListMemberDialog extends StatelessWidget {
   const _ListMemberDialog({

@@ -11,14 +11,14 @@ class TransactionsRepository extends BaseRepository {
   Future<BaseResponse<List<Transaction>>> getTransactions(
     String key,
     String workspaceId,
-    String memberWorkspaceId,
+    String? memberWorkspaceId,
   ) async {
     final response = await get(
       '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiTransactions}',
       queryParameters: <String, String>{
         // 'search_columns': 'name',
         // 'search_key': key,
-        'member_workspace_id': memberWorkspaceId,
+        if (memberWorkspaceId != null) 'member_workspace_id': memberWorkspaceId,
         'page': '1',
         'per_page': '100',
       },

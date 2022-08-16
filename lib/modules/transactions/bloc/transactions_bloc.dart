@@ -12,8 +12,7 @@ part 'transactions_event.dart';
 part 'transactions_state.dart';
 
 class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
-  TransactionsBloc()
-      : super(TransactionsInitial()) {
+  TransactionsBloc() : super(TransactionsInitial()) {
     on<FetchTransactions>(_searchTransactions);
     on<CreateTransactions>(_createTransaction);
   }
@@ -26,7 +25,11 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
   ) async {
     emit(TransactionsLoading(state));
     final result = await ErrorWrapper.asyncGuard(
-      () => _repo.getTransactions(event.key, event.workspaceId, event.memberWorkspaceId),
+      () => _repo.getTransactions(
+        event.key,
+        event.workspaceId,
+        event.memberWorkspaceId,
+      ),
       onError: (_) {
         emit(TransactionsLoaded(state.transactions));
         // emit(TransactionsError(state, 'Error loading transactions'));
@@ -46,7 +49,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
     final result = await ErrorWrapper.asyncGuard(
       () => _repo.createTransaction(
         event.workspaceId,
-        event.memberWorkspaceId,
+        event.memberWorkspaceId!,
         event.categoryId,
         event.description,
         event.amount,

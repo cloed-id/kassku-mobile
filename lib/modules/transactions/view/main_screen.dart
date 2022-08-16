@@ -4,15 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
-import 'package:kassku_mobile/helpers/navigation_helper.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/category.dart';
 import 'package:kassku_mobile/models/member_workspace.dart';
-import 'package:kassku_mobile/models/transaction.dart';
 import 'package:kassku_mobile/models/workspace.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/categories_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/transactions_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
+import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 import 'package:kassku_mobile/utils/extensions/widget_extension.dart';
@@ -23,8 +22,8 @@ part 'package:kassku_mobile/modules/transactions/view/widgets/form_workspace_dia
 part 'package:kassku_mobile/modules/transactions/view/widgets/form_transaction_dialog.dart';
 part 'package:kassku_mobile/modules/transactions/view/widgets/list_member_dialog.dart';
 
-class TransactionsScreen extends StatelessWidget {
-  const TransactionsScreen({super.key});
+class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -192,10 +191,38 @@ class TransactionsScreen extends StatelessWidget {
                 return const SizedBox();
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.list_alt),
-              title: const Text('Transaksi Anggota'),
-              onTap: () {},
+            BlocBuilder<WorkspacesBloc, WorkspacesState>(
+              builder: (context, state) {
+                if (state is WorkspacesLoaded && state.selected != null) {
+                  return ListTile(
+                    leading: const Icon(Icons.list_alt),
+                    title: const Text('Transaksi Anggota'),
+                    onTap: () {
+                      MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (context) => TransactionsBloc()
+                              ..add(
+                                FetchTransactions(
+                                  state.selected!.id,
+                                  null,
+                                  key: '',
+                                ),
+                              ),
+                          ),
+                          BlocProvider.value(
+                            value: BlocProvider.of<WorkspacesBloc>(context),
+                          )
+                        ],
+                        child: const TransactionsListWidget(
+                          isWorkspaceTransactions: true,
+                        ),
+                      ).showSheet<void>(context);
+                    },
+                  );
+                }
+                return const SizedBox();
+              },
             ),
             ListTile(
               leading: const Icon(Icons.logout),
@@ -264,7 +291,7 @@ class TransactionsScreen extends StatelessWidget {
                           );
                     }
                   },
-                  child: const _TransactionsList(),
+                  child: const TransactionsListWidget(),
                 ),
               ),
             );
@@ -343,115 +370,6 @@ class _DropdownItem extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _TransactionsList extends StatelessWidget {
-  const _TransactionsList({super.key});
-
-  void _openTrxDialog(BuildContext context) {
-    final workspaceBloc = BlocProvider.of<WorkspacesBloc>(context);
-    final transactionBloc = BlocProvider.of<TransactionsBloc>(context);
-
-    MultiBlocProvider(
-      providers: [
-        BlocProvider.value(
-          value: workspaceBloc,
-        ),
-        BlocProvider.value(
-          value: transactionBloc,
-        ),
-      ],
-      child: const _FormTransactionDialog(),
-    ).showCustomDialog<void>(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final transactionState = context.watch<TransactionsBloc>().state;
-
-    if (transactionState is TransactionsError) {
-      return Center(
-        child: Text(transactionState.message),
-      );
-    }
-
-    if (transactionState is TransactionsLoaded) {
-      final transactions = transactionState.transactions;
-
-      if (transactions.isEmpty) {
-        return Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Tidak ada transaksi,',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () => _openTrxDialog(context),
-                child: const Text('silahkan buat'),
-              )
-            ],
-          ),
-        );
-      }
-
-      return Stack(
-        children: [
-          ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: transactions.length,
-            itemBuilder: (context, index) => _TransactionItem(
-              transaction: transactions[index],
-            ),
-          ),
-          Positioned(
-            right: 16,
-            bottom: 16,
-            child: FloatingActionButton(
-              backgroundColor: ColorName.secondaryContainer,
-              onPressed: () => _openTrxDialog(context),
-              child: const Icon(
-                Icons.add,
-                color: ColorName.white,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-}
-
-class _TransactionItem extends StatelessWidget {
-  const _TransactionItem({required this.transaction});
-
-  final Transaction transaction;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        transaction.type == TransactionType.income
-            ? Icons.arrow_drop_up_rounded
-            : Icons.arrow_drop_down_rounded,
-        size: 52,
-        color: transaction.type == TransactionType.income
-            ? ColorName.success
-            : ColorName.errorForeground,
-      ),
-      title: Text(transaction.categoryName.capitalize),
-      subtitle: Text(transaction.description.capitalize),
-      trailing: Text(currencyFormatterNoLeading.format(transaction.amount)),
     );
   }
 }

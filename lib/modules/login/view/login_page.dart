@@ -219,10 +219,7 @@ class _FormBodyWidget extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: MaterialButton(
-                      child: const Text(
-                        'Lupa Password?',
-                        style: TextStyle(color: Colors.lightBlue),
-                      ),
+                      child: const Text('Daftar'),
                       onPressed: () {},
                     ),
                   ),

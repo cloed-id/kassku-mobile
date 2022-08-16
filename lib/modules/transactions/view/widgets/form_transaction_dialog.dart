@@ -1,4 +1,4 @@
-part of 'package:kassku_mobile/modules/transactions/view/transactions_screen.dart';
+part of 'package:kassku_mobile/modules/transactions/view/main_screen.dart';
 
 class _TransactionTypeCubit extends Cubit<TransactionType> {
   _TransactionTypeCubit() : super(TransactionType.income);
@@ -24,8 +24,8 @@ class _CategoryFieldValueCubit extends Cubit<String> {
   }
 }
 
-class _FormTransactionDialog extends StatelessWidget {
-  const _FormTransactionDialog({super.key});
+class FormTransactionDialog extends StatelessWidget {
+  const FormTransactionDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
