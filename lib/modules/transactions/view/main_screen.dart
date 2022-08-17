@@ -141,6 +141,10 @@ class MainScreen extends StatelessWidget {
                               ),
                               isExpanded: true,
                               dropdownColor: ColorName.secondary,
+                              icon: const Icon(
+                                Icons.arrow_drop_down,
+                                color: ColorName.white,
+                              ),
                               underline: const SizedBox(),
                               items: state.workspaces
                                   .map(
