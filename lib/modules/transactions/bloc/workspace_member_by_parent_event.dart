@@ -16,3 +16,18 @@ class FetchWorkspaceMemberByParent extends WorkspaceMemberByParentEvent {
   @override
   List<Object> get props => [workspaceId, memberId];
 }
+
+class SetBalanceWorkspaceMemberByParent extends WorkspaceMemberByParentEvent {
+  const SetBalanceWorkspaceMemberByParent({
+    required this.workspaceId,
+    required this.memberId,
+    required this.amount,
+  });
+
+  final String workspaceId;
+  final String memberId;
+  final int amount;
+
+  @override
+  List<Object> get props => [workspaceId, memberId, amount];
+}

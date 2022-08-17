@@ -11,6 +11,7 @@ class WorkspaceMemberByParentBloc
     extends Bloc<WorkspaceMemberByParentEvent, WorkspaceMemberByParentState> {
   WorkspaceMemberByParentBloc() : super(WorkspaceMemberByParentInitial()) {
     on<FetchWorkspaceMemberByParent>(_fetchWorkspaceMemberByParent);
+    on<SetBalanceWorkspaceMemberByParent>(_setBalanceWorkspaceMemberByParent);
   }
 
   final _repo = WorkspacesRepository();
@@ -30,5 +31,25 @@ class WorkspaceMemberByParentBloc
     final data = result.data as List<MemberWorkspace>;
 
     emit(WorkspaceMemberByParentLoaded(data));
+  }
+
+  Future<void> _setBalanceWorkspaceMemberByParent(
+    SetBalanceWorkspaceMemberByParent event,
+    Emitter<WorkspaceMemberByParentState> emit,
+  ) async {
+    emit(WorkspaceMemberByParentLoading(state));
+    await ErrorWrapper.asyncGuard(
+      () => _repo.setBalanceMember(
+        event.memberId,
+        event.workspaceId,
+        event.amount,
+      ),
+      onError: (_) {
+        emit(WorkspaceMemberByParentError(state, 'Kesalahan mendapatkan data'));
+      },
+    );
+
+    emit(WorkspaceMemberByParentSuccess(state.memberWorkspaces));
+    emit(WorkspaceMemberByParentLoaded(state.memberWorkspaces));
   }
 }

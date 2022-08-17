@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get_it/get_it.dart';
+import 'package:kassku_mobile/models/mobile_config.dart';
 import 'package:kassku_mobile/models/workspace.dart';
 import 'package:kassku_mobile/repositories/workspaces_repository.dart';
+import 'package:kassku_mobile/services/hive_service.dart';
 import 'package:kassku_mobile/utils/wrappers/error_wrapper.dart';
 
 part 'workspaces_event.dart';
-
 part 'workspaces_state.dart';
 
 class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
@@ -46,6 +49,22 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
     Emitter<WorkspacesState> emit,
   ) {
     emit(WorkspacesLoading(state));
+
+    final mobileConfig = GetIt.I<HiveService>().getMobileConfig();
+
+    if (mobileConfig != null) {
+      GetIt.I<HiveService>().storeMobileConfig(
+        mobileConfig.copyWith(selectedWorkspace: event.workspace.id),
+      );
+    } else {
+      GetIt.I<HiveService>().storeMobileConfig(
+        MobileConfig(
+          isInitialOpen: true,
+          selectedWorkspace: event.workspace.id,
+        ),
+      );
+    }
+
     emit(WorkspacesSelected(state.workspaces, event.workspace));
     emit(WorkspacesLoaded(state.workspaces, event.workspace));
   }
@@ -64,7 +83,19 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
 
     final data = result.data as List<Workspace>;
 
-    emit(WorkspacesLoaded(data, data.first));
+    final selected =
+        GetIt.I<HiveService>().getMobileConfig()?.selectedWorkspace;
+
+    final selectedWorkspace = data.firstWhereOrNull(
+      (w) => w.id == selected,
+    );
+
+    emit(
+      WorkspacesLoaded(
+        data,
+        selectedWorkspace ?? (data.isNotEmpty ? data.first : null),
+      ),
+    );
   }
 
   Future<void> _createWorkspace(
@@ -82,7 +113,7 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
 
     final data = result.data as Workspace;
 
-    emit(WorkspacesSuccess([data, ...state.workspaces], data));
+    emit(WorkspacesCreated([data, ...state.workspaces], data));
     emit(WorkspacesLoaded(state.workspaces, state.selected));
   }
 }

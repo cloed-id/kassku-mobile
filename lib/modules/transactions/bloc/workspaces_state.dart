@@ -23,9 +23,10 @@ class WorkspacesLoaded extends WorkspacesState {
   const WorkspacesLoaded(super.workspaces, super.selected);
 }
 
-class WorkspacesSuccess extends WorkspacesState {
-  const WorkspacesSuccess(super.workspaces, super.selected);
+class WorkspacesCreated extends WorkspacesState {
+  const WorkspacesCreated(super.workspaces, super.selected);
 }
+
 class WorkspacesSelected extends WorkspacesState {
   const WorkspacesSelected(super.workspaces, super.selected);
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 part of 'package:kassku_mobile/modules/transactions/view/main_screen.dart';
 
 class _ListMemberDialog extends StatelessWidget {
@@ -16,6 +18,17 @@ class _ListMemberDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (members.isEmpty) {
+      return const Center(
+        child: Text(
+          'Tidak ada anggota',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -62,10 +75,29 @@ class _ListMemberDialog extends StatelessWidget {
                     : null,
                 onTap: ableToSetBalance
                     ? () {
+                        final workspaceMemberByParentBloc =
+                            BlocProvider.of<WorkspaceMemberByParentBloc>(
+                          context,
+                        );
+
+                        final workspacesBloc = BlocProvider.of<WorkspacesBloc>(
+                          context,
+                        );
                         showDialog<void>(
                           context: context,
-                          builder: (context) => _SetMemberBalanceDialog(
-                            member: member,
+                          builder: (context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider.value(
+                                value: workspaceMemberByParentBloc,
+                              ),
+                              BlocProvider.value(
+                                value: workspacesBloc,
+                              ),
+                            ],
+                            child: _SetMemberBalanceDialog(
+                              workspace: workspace,
+                              memberId: member.id,
+                            ),
                           ),
                         );
                       }
@@ -79,43 +111,90 @@ class _ListMemberDialog extends StatelessWidget {
   }
 }
 
-class _SetMemberBalanceDialog extends StatelessWidget {
-  const _SetMemberBalanceDialog({super.key, required this.member});
+class _AmountCubit extends Cubit<int> {
+  _AmountCubit() : super(0);
 
-  final MemberWorkspace member;
+  void setAmount(int amount) {
+    emit(amount);
+  }
+}
+
+class _SetMemberBalanceDialog extends StatelessWidget {
+  const _SetMemberBalanceDialog({
+    super.key,
+    required this.workspace,
+    required this.memberId,
+  });
+
+  final Workspace workspace;
+  final String memberId;
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Set saldo anggota'),
-      content: TextField(
-        keyboardType: TextInputType.number,
-        autofocus: true,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: const InputDecoration(
-          hintText: 'Saldo',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
+    return BlocProvider(
+      create: (context) => _AmountCubit(),
+      child: Builder(builder: (context) {
+        return AlertDialog(
+          title: const Text('Tambah saldo anggota'),
+          content: TextFormField(
+            keyboardType: TextInputType.number,
+            autofocus: true,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: const InputDecoration(
+              hintText: 'Saldo',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                borderSide: BorderSide(color: Colors.black54),
+              ),
             ),
-            borderSide: BorderSide(color: Colors.black54),
+            onChanged: (value) {
+              context.read<_AmountCubit>().setAmount(int.tryParse(value) ?? 0);
+            },
           ),
-        ),
-        onChanged: (value) {},
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      actions: [
-        TextButton(
-          child: const Text('Batal'),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        TextButton(
-          child: const Text('Simpan'),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Batal'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            BlocListener<WorkspaceMemberByParentBloc,
+                WorkspaceMemberByParentState>(
+              listener: (context, state) {
+                if (state is WorkspaceMemberByParentSuccess) {
+                  context.read<WorkspaceMemberByParentBloc>().add(
+                        FetchWorkspaceMemberByParent(
+                          memberId: memberId,
+                          workspaceId: workspace.id,
+                        ),
+                      );
+                  GetIt.I<FlashMessageHelper>()
+                      .showTopFlash('Berhasil perbaharui saldo');
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                }
+              },
+              child: TextButton(
+                child: const Text('Simpan'),
+                onPressed: () {
+                  final amount = context.read<_AmountCubit>().state;
+                  context.read<WorkspaceMemberByParentBloc>().add(
+                        SetBalanceWorkspaceMemberByParent(
+                          memberId: memberId,
+                          workspaceId: workspace.id,
+                          amount: amount,
+                        ),
+                      );
+                },
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

@@ -18,15 +18,18 @@ class MobileConfigAdapter extends TypeAdapter<MobileConfig> {
     };
     return MobileConfig(
       isInitialOpen: fields[0] as bool,
+      selectedWorkspace: fields[1] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, MobileConfig obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.isInitialOpen);
+      ..write(obj.isInitialOpen)
+      ..writeByte(1)
+      ..write(obj.selectedWorkspace);
   }
 
   @override

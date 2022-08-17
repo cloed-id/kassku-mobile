@@ -90,11 +90,17 @@ class TransactionsListWidget extends StatelessWidget {
           physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics(),
           ),
-          itemCount: transactions.length,
-          itemBuilder: (context, index) => _TransactionItem(
-            transaction: transactions[index],
-            isWorkspaceTransaction: isWorkspaceTransactions,
-          ),
+          itemCount: transactions.length + 1,
+          itemBuilder: (context, index) {
+            if (index == transactions.length) {
+              return const SizedBox(height: 55);
+            }
+
+            return _TransactionItem(
+              transaction: transactions[index],
+              isWorkspaceTransaction: isWorkspaceTransactions,
+            );
+          },
         ),
       );
 

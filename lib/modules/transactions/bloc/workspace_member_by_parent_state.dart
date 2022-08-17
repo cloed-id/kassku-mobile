@@ -22,6 +22,10 @@ class WorkspaceMemberByParentLoaded extends WorkspaceMemberByParentState {
   const WorkspaceMemberByParentLoaded(super.memberWorkspaces);
 }
 
+class WorkspaceMemberByParentSuccess extends WorkspaceMemberByParentState {
+  const WorkspaceMemberByParentSuccess(super.memberWorkspaces);
+}
+
 class WorkspaceMemberByParentError extends WorkspaceMemberByParentState {
   WorkspaceMemberByParentError(WorkspaceMemberByParentState state, this.message)
       : super(state.memberWorkspaces);

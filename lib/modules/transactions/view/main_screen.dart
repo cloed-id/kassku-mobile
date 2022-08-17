@@ -133,8 +133,8 @@ class MainScreen extends StatelessWidget {
                                 )
                               ],
                             ),
-                            DropdownButton<Workspace>(
-                              value: state.selected,
+                            DropdownButton<String?>(
+                              value: state.selected?.id,
                               style: const TextStyle(
                                 color: ColorName.white,
                                 fontWeight: FontWeight.bold,
@@ -149,7 +149,7 @@ class MainScreen extends StatelessWidget {
                               items: state.workspaces
                                   .map(
                                     (e) => DropdownMenuItem(
-                                      value: e,
+                                      value: e.id,
                                       child: _DropdownItem(e: e),
                                     ),
                                   )
@@ -159,9 +159,13 @@ class MainScreen extends StatelessWidget {
                                   return;
                                 }
 
+                                final workspace = state.workspaces.firstWhere(
+                                  (e) => e.id == value,
+                                );
+
                                 context
                                     .read<WorkspacesBloc>()
-                                    .add(SelectWorkspace(workspace: value));
+                                    .add(SelectWorkspace(workspace: workspace));
                               },
                             ),
                           ],
@@ -204,7 +208,6 @@ class MainScreen extends StatelessWidget {
                 if (workspaceState is WorkspacesLoaded &&
                     workspaceState.selected != null) {
                   return BlocProvider(
-                    lazy: false,
                     create: (context) => WorkspaceMemberByParentBloc()
                       ..add(
                         FetchWorkspaceMemberByParent(
@@ -219,11 +222,25 @@ class MainScreen extends StatelessWidget {
                           leading: const Icon(Icons.people_alt_outlined),
                           title: const Text('Anggota Anda'),
                           onTap: () {
-                            _ListMemberDialog(
-                              label: 'Anggota Anda',
-                              members: workspaceMemberState.memberWorkspaces,
-                              workspace: workspaceState.selected!,
-                              ableToSetBalance: true,
+                            final workspaceMemberByParentBloc =
+                                BlocProvider.of<WorkspaceMemberByParentBloc>(
+                              context,
+                            );
+                            final workspacesBloc =
+                                BlocProvider.of<WorkspacesBloc>(context);
+                            MultiBlocProvider(
+                              providers: [
+                                BlocProvider.value(
+                                  value: workspaceMemberByParentBloc,
+                                ),
+                                BlocProvider.value(value: workspacesBloc)
+                              ],
+                              child: _ListMemberDialog(
+                                label: 'Anggota Anda',
+                                members: workspaceMemberState.memberWorkspaces,
+                                workspace: workspaceState.selected!,
+                                ableToSetBalance: true,
+                              ),
                             ).showSheet<void>(context);
                           },
                         );
@@ -298,7 +315,9 @@ class MainScreen extends StatelessWidget {
       ),
       body: BlocConsumer<WorkspacesBloc, WorkspacesState>(
         listener: (context, state) {
-          if (state is WorkspacesSuccess) {
+          if (state is WorkspacesCreated) {
+            GetIt.I<FlashMessageHelper>()
+                .showTopFlash('Area kerja berhasil dibuat');
             context.read<WorkspacesBloc>().add(const FetchWorkspaces(key: ''));
           }
         },

@@ -64,18 +64,18 @@ class WorkspacesRepository extends BaseRepository {
     final result = responseWrapper<List<MapString>, MapString>(response);
 
     final members = result.map(MemberWorkspace.fromJson).toList();
-    
+
     return BaseResponse.success(members);
   }
 
   Future<void> setBalanceMember(
     String memberId,
     String workspaceId,
-    double amount,
+    int amount,
   ) async {
     final response = await put(
       '${ApiEndPoint.kApiWorkspaces}/$workspaceId/set-member-balance',
-      data: <String, dynamic>{
+      queryParameters: <String, dynamic>{
         'amount': amount,
         'member_workspace_id': memberId,
       },
