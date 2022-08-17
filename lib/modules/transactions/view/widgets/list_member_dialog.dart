@@ -3,10 +3,14 @@ part of 'package:kassku_mobile/modules/transactions/view/main_screen.dart';
 class _ListMemberDialog extends StatelessWidget {
   const _ListMemberDialog({
     super.key,
+    required this.label,
     required this.members,
     required this.workspace,
+    this.ableToSetBalance = false,
   });
 
+  final String label;
+  final bool ableToSetBalance;
   final List<MemberWorkspace> members;
   final Workspace workspace;
 
@@ -19,7 +23,7 @@ class _ListMemberDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Anggota ${workspace.name.capitalizeFirstOfEach}',
+            label,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -56,11 +60,62 @@ class _ListMemberDialog extends StatelessWidget {
                 trailing: member.balance != null
                     ? Text(currencyFormatterNoLeading.format(member.balance))
                     : null,
+                onTap: ableToSetBalance
+                    ? () {
+                        showDialog<void>(
+                          context: context,
+                          builder: (context) => _SetMemberBalanceDialog(
+                            member: member,
+                          ),
+                        );
+                      }
+                    : null,
               );
             },
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SetMemberBalanceDialog extends StatelessWidget {
+  const _SetMemberBalanceDialog({super.key, required this.member});
+
+  final MemberWorkspace member;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Set saldo anggota'),
+      content: TextField(
+        keyboardType: TextInputType.number,
+        autofocus: true,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        decoration: const InputDecoration(
+          hintText: 'Saldo',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+            borderSide: BorderSide(color: Colors.black54),
+          ),
+        ),
+        onChanged: (value) {},
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      actions: [
+        TextButton(
+          child: const Text('Batal'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        TextButton(
+          child: const Text('Simpan'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
     );
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/categories_bloc.dart';
@@ -5,9 +7,9 @@ import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 
 class CategoryListWidget extends StatelessWidget {
   const CategoryListWidget({
-    Key? key,
+    super.key,
     required this.workspaceId,
-  }) : super(key: key);
+  });
 
   final String workspaceId;
 
@@ -22,7 +24,7 @@ class CategoryListWidget extends StatelessWidget {
 }
 
 class _CategoryList extends StatelessWidget {
-  const _CategoryList({Key? key}) : super(key: key);
+  const _CategoryList({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,10 @@
 import 'package:kassku_mobile/models/base_response.dart';
+import 'package:kassku_mobile/models/member_workspace.dart';
 import 'package:kassku_mobile/models/workspace.dart';
 import 'package:kassku_mobile/repositories/base_repository.dart';
 import 'package:kassku_mobile/utils/constants.dart';
+import 'package:kassku_mobile/utils/enums.dart';
+import 'package:kassku_mobile/utils/exceptions.dart';
 import 'package:kassku_mobile/utils/typedefs.dart';
 
 class WorkspacesRepository extends BaseRepository {
@@ -45,5 +48,42 @@ class WorkspacesRepository extends BaseRepository {
     final result = responseWrapper<MapString, MapString>(response);
     final workspace = Workspace.fromJson(result);
     return BaseResponse.success(workspace);
+  }
+
+  Future<BaseResponse<List<MemberWorkspace>>> getWorkspaceMemberbyParent(
+    String workspaceId,
+    String memberId,
+  ) async {
+    final response = await get(
+      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/get-member-by-parent',
+      queryParameters: <String, String>{
+        'member_workspace_id': memberId,
+      },
+    );
+
+    final result = responseWrapper<List<MapString>, MapString>(response);
+
+    final members = result.map(MemberWorkspace.fromJson).toList();
+    
+    return BaseResponse.success(members);
+  }
+
+  Future<void> setBalanceMember(
+    String memberId,
+    String workspaceId,
+    double amount,
+  ) async {
+    final response = await put(
+      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/set-member-balance',
+      data: <String, dynamic>{
+        'amount': amount,
+        'member_workspace_id': memberId,
+      },
+    );
+    if (response.status == ResponseStatus.success) {
+      return;
+    }
+
+    throw CustomExceptionString(response.message ?? 'Unknown error');
   }
 }

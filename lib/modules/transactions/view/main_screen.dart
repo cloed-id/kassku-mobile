@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:kassku_mobile/models/member_workspace.dart';
 import 'package:kassku_mobile/models/workspace.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/categories_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/transactions_bloc.dart';
+import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_parent_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_list_widget.dart';
@@ -40,7 +43,6 @@ class MainScreen extends StatelessWidget {
                     state.selected != null &&
                     state.selected!.balance != null) {
                   return Text(
-                    // ignore: lines_longer_than_80_chars
                     'Saldo: ${currencyFormatterNoLeading.format(state.selected!.balance)}',
                     style: const TextStyle(
                       fontSize: 12,
@@ -194,13 +196,50 @@ class MainScreen extends StatelessWidget {
               },
             ),
             BlocBuilder<WorkspacesBloc, WorkspacesState>(
+              builder: (context, workspaceState) {
+                if (workspaceState is WorkspacesLoaded &&
+                    workspaceState.selected != null) {
+                  return BlocProvider(
+                    lazy: false,
+                    create: (context) => WorkspaceMemberByParentBloc()
+                      ..add(
+                        FetchWorkspaceMemberByParent(
+                          workspaceId: workspaceState.selected!.id,
+                          memberId: workspaceState.selected!.memberWorkspaceId,
+                        ),
+                      ),
+                    child: BlocBuilder<WorkspaceMemberByParentBloc,
+                        WorkspaceMemberByParentState>(
+                      builder: (context, workspaceMemberState) {
+                        return ListTile(
+                          leading: const Icon(Icons.people_alt_outlined),
+                          title: const Text('Anggota Anda'),
+                          onTap: () {
+                            _ListMemberDialog(
+                              label: 'Anggota Anda',
+                              members: workspaceMemberState.memberWorkspaces,
+                              workspace: workspaceState.selected!,
+                              ableToSetBalance: true,
+                            ).showSheet<void>(context);
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+                return const SizedBox();
+              },
+            ),
+            BlocBuilder<WorkspacesBloc, WorkspacesState>(
               builder: (context, state) {
                 if (state is WorkspacesLoaded && state.selected != null) {
                   return ListTile(
                     leading: const Icon(Icons.people),
-                    title: const Text('Anggota'),
+                    title: const Text('Anggota Area Kerja'),
                     onTap: () {
                       _ListMemberDialog(
+                        label:
+                            'Anggota Area Kerja ${state.selected!.name.capitalizeFirstOfEach}',
                         members: state.selected!.members,
                         workspace: state.selected!,
                       ).showSheet<void>(context);
@@ -308,6 +347,8 @@ class MainScreen extends StatelessWidget {
                               key: '',
                             ),
                           );
+
+                      Navigator.of(context).pop();
                     }
                   },
                   child: const TransactionsListWidget(),
