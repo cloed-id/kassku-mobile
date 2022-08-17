@@ -254,7 +254,7 @@ class _FormTransactionBodyDialogState
                                 .read<CategoriesBloc>()
                                 .state
                                 .categories
-                                .first;
+                                .firstWhere((element) => element.isSelected);
 
                             final amount = int.tryParse(_amount);
 
