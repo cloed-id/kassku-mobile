@@ -15,6 +15,7 @@ import 'package:kassku_mobile/modules/transactions/bloc/transactions_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_parent_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
+import 'package:kassku_mobile/modules/transactions/view/widgets/form_add_member_dialog.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
@@ -138,7 +139,7 @@ class MainScreen extends StatelessWidget {
                               ],
                             ),
                             DropdownButton<String?>(
-                              value: state.selected?.id,
+                              value: state.selected?.memberWorkspaceId,
                               style: const TextStyle(
                                 color: ColorName.white,
                                 fontWeight: FontWeight.bold,
@@ -153,7 +154,7 @@ class MainScreen extends StatelessWidget {
                               items: state.workspaces
                                   .map(
                                     (e) => DropdownMenuItem(
-                                      value: e.id,
+                                      value: e.memberWorkspaceId,
                                       child: _DropdownItem(e: e),
                                     ),
                                   )
@@ -164,7 +165,7 @@ class MainScreen extends StatelessWidget {
                                 }
 
                                 final workspace = state.workspaces.firstWhere(
-                                  (e) => e.id == value,
+                                  (e) => e.memberWorkspaceId == value,
                                 );
 
                                 context
@@ -210,7 +211,9 @@ class MainScreen extends StatelessWidget {
             BlocBuilder<WorkspacesBloc, WorkspacesState>(
               builder: (context, workspaceState) {
                 if (workspaceState is WorkspacesLoaded &&
-                    workspaceState.selected != null) {
+                    workspaceState.selected != null &&
+                    workspaceState.selected!.role != 'finance' &&
+                    workspaceState.selected!.role != 'observer') {
                   return BlocProvider(
                     create: (context) => WorkspaceMemberByParentBloc()
                       ..add(

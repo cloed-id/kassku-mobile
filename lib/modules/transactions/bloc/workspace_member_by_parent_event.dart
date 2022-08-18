@@ -31,3 +31,18 @@ class SetBalanceWorkspaceMemberByParent extends WorkspaceMemberByParentEvent {
   @override
   List<Object> get props => [workspaceId, memberId, amount];
 }
+
+class CreateWorkspaceMemberByParent extends WorkspaceMemberByParentEvent {
+  const CreateWorkspaceMemberByParent({
+    required this.workspaceId,
+    required this.username,
+    required this.role,
+  });
+
+  final String workspaceId;
+  final String username;
+  final String role;
+
+  @override
+  List<Object> get props => [workspaceId, username];
+}

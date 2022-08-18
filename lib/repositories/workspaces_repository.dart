@@ -1,3 +1,5 @@
+import 'package:get_it/get_it.dart';
+import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/base_response.dart';
 import 'package:kassku_mobile/models/member_workspace.dart';
 import 'package:kassku_mobile/models/workspace.dart';
@@ -74,11 +76,39 @@ class WorkspacesRepository extends BaseRepository {
     int amount,
   ) async {
     final response = await put(
-      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/set-member-balance',
+      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/add-member-balance',
       queryParameters: <String, dynamic>{
         'amount': amount,
         'member_workspace_id': memberId,
       },
+    );
+    if (response.status == ResponseStatus.success) {
+      return;
+    }
+
+    throw CustomExceptionString(response.message ?? 'Unknown error');
+  }
+
+  Future<void> addMemberToWorkspace(
+    String username,
+    String role,
+    String workspaceId,
+  ) async {
+    final user = GetIt.I<UserHelper>().getUser();
+
+    if (user == null) {
+      throw CustomExceptionString('Parent user not found, please sign in');
+    }
+
+    final response = await post(
+      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/add-member',
+      data: [
+        {
+          'username': username,
+          'role': role,
+          'parent_username': user.username,
+        }
+      ],
     );
     if (response.status == ResponseStatus.success) {
       return;

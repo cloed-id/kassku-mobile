@@ -12,9 +12,31 @@ class WorkspaceMemberByParentBloc
   WorkspaceMemberByParentBloc() : super(WorkspaceMemberByParentInitial()) {
     on<FetchWorkspaceMemberByParent>(_fetchWorkspaceMemberByParent);
     on<SetBalanceWorkspaceMemberByParent>(_setBalanceWorkspaceMemberByParent);
+    on<CreateWorkspaceMemberByParent>(_createWorkspaceMemberByParent);
   }
 
   final _repo = WorkspacesRepository();
+
+  Future<void> _createWorkspaceMemberByParent(
+    CreateWorkspaceMemberByParent event,
+    Emitter<WorkspaceMemberByParentState> emit,
+  ) async {
+    emit(WorkspaceMemberByParentLoading(state));
+    await ErrorWrapper.asyncGuard(
+      () => _repo.addMemberToWorkspace(
+        event.username,
+        event.role,
+        event.workspaceId,
+      ),
+      onError: (e) {
+        emit(WorkspaceMemberByParentInitial());
+      },
+    ).then((value) {
+      emit(WorkspaceMemberByParentSuccess(state.memberWorkspaces));
+    }).catchError((e) {
+      emit(WorkspaceMemberByParentInitial());
+    });
+  }
 
   Future<void> _fetchWorkspaceMemberByParent(
     FetchWorkspaceMemberByParent event,

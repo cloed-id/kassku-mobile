@@ -21,6 +21,7 @@ class UserHelper {
     try {
       await GetIt.I<HiveService>().deleteUser();
       await GetIt.I<FlutterSecureStorage>().deleteAll();
+      GetIt.I<HiveService>().resetMobileConfig();
       GetIt.I<NavigationHelper>().goToLogin();
     } catch (e) {
       GetIt.I<FlashMessageHelper>().showError(e.toString());

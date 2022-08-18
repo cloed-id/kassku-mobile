@@ -67,4 +67,19 @@ class HiveService {
   void storeMobileConfig(MobileConfig data) {
     _hive.box<MobileConfig>(_boxMobileConfig).put(_keyMobileConfig, data);
   }
+
+  /// reset mobile config
+  void resetMobileConfig() {
+    final config = getMobileConfig();
+
+    if (config == null) return;
+
+    _hive.box<MobileConfig>(_boxMobileConfig).put(
+          _keyMobileConfig,
+          MobileConfig(
+            isInitialOpen: config.isInitialOpen,
+            selectedWorkspace: null,
+          ),
+        );
+  }
 }

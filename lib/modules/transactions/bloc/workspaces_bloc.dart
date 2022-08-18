@@ -54,13 +54,15 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
 
     if (mobileConfig != null) {
       GetIt.I<HiveService>().storeMobileConfig(
-        mobileConfig.copyWith(selectedWorkspace: event.workspace.id),
+        mobileConfig.copyWith(
+          selectedWorkspace: event.workspace.memberWorkspaceId,
+        ),
       );
     } else {
       GetIt.I<HiveService>().storeMobileConfig(
         MobileConfig(
           isInitialOpen: true,
-          selectedWorkspace: event.workspace.id,
+          selectedWorkspace: event.workspace.memberWorkspaceId,
         ),
       );
     }
@@ -87,7 +89,7 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
         GetIt.I<HiveService>().getMobileConfig()?.selectedWorkspace;
 
     final selectedWorkspace = data.firstWhereOrNull(
-      (w) => w.id == selected,
+      (w) => w.memberWorkspaceId == selected,
     );
 
     emit(

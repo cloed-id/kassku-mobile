@@ -16,15 +16,38 @@ class _ListMemberDialog extends StatelessWidget {
   final List<MemberWorkspace> members;
   final Workspace workspace;
 
+  void _openAddMemberDialog(BuildContext context) {
+    final workspaceMemberByParentBloc =
+        BlocProvider.of<WorkspaceMemberByParentBloc>(context);
+    final workspacesBloc = BlocProvider.of<WorkspacesBloc>(context);
+    MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: workspaceMemberByParentBloc),
+        BlocProvider.value(value: workspacesBloc)
+      ],
+      child: const FormAddMemberDialog(),
+    ).showCustomDialog<void>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (members.isEmpty) {
-      return const Center(
-        child: Text(
-          'Tidak ada anggota',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+      return Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Tidak ada anggota,',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () => _openAddMemberDialog(context),
+              child: const Text('silahkan tambah'),
+            )
+          ],
         ),
       );
     }
@@ -35,12 +58,21 @@ class _ListMemberDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              if (ableToSetBalance)
+                IconButton(
+                  onPressed: () => _openAddMemberDialog(context),
+                  icon: const Icon(Icons.person_add),
+                ),
+            ],
           ),
           const SizedBox(height: 16),
           ListView.builder(
