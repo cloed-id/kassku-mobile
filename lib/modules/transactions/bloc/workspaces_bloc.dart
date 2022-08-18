@@ -38,7 +38,8 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
     final data = result.data as Workspace;
 
     final workspaces = state.workspaces;
-    final index = workspaces.indexWhere((w) => w.id == data.id);
+    final index = workspaces
+        .indexWhere((w) => w.memberWorkspaceId == data.memberWorkspaceId);
     workspaces[index] = data;
 
     emit(WorkspacesLoaded(workspaces, data));

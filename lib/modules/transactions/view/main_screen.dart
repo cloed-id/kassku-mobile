@@ -380,7 +380,9 @@ class MainScreen extends StatelessWidget {
                       context.read<TransactionsBloc>().add(
                             FetchTransactions(
                               state.selected!.id,
-                              state.selected!.memberWorkspaceId,
+                              state.selected!.role == 'observer'
+                                  ? null
+                                  : state.selected!.memberWorkspaceId,
                               key: '',
                             ),
                           );
