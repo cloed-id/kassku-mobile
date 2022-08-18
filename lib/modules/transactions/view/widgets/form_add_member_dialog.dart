@@ -94,19 +94,21 @@ class _FormAddMemberBodyDialog extends StatelessWidget {
                       hint: const Text('Pilih jenis anggota'),
                       underline: const SizedBox(),
                       items: [
-                        const DropdownMenuItem(
-                          value: 'head',
-                          child: Text('Kepala'),
-                        ),
+                        if (workspace.role == 'admin')
+                          const DropdownMenuItem(
+                            value: 'head',
+                            child: Text('Kepala'),
+                          ),
                         if (workspace.role == 'head')
                           const DropdownMenuItem(
                             value: 'finance',
                             child: Text('Bendahara'),
                           ),
-                        const DropdownMenuItem(
-                          value: 'observer',
-                          child: Text('Pengamat'),
-                        ),
+                        if (workspace.role == 'admin')
+                          const DropdownMenuItem(
+                            value: 'observer',
+                            child: Text('Pengamat'),
+                          ),
                       ],
                       onChanged: (value) {
                         if (value != null) {

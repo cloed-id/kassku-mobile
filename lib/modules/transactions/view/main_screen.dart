@@ -36,28 +36,31 @@ class MainScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Transaksi Anda'),
-            BlocBuilder<WorkspacesBloc, WorkspacesState>(
-              builder: (context, state) {
-                if (state is WorkspacesLoaded &&
-                    state.selected != null &&
-                    state.selected!.balance != null) {
-                  return Text(
-                    'Saldo: ${currencyFormatterNoLeading.format(state.selected!.balance)}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+        title: BlocBuilder<WorkspacesBloc, WorkspacesState>(
+          builder: (context, state) {
+            if (state is WorkspacesLoaded && state.selected != null) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    state.selected!.role != 'observer'
+                        ? 'Transaksi Anda'
+                        : 'Transaksi Area Kerja',
+                  ),
+                  if (state.selected!.balance != null)
+                    Text(
+                      'Saldo: ${currencyFormatterNoLeading.format(state.selected!.balance)}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  );
-                }
+                ],
+              );
+            }
 
-                return const SizedBox();
-              },
-            ),
-          ],
+            return const SizedBox();
+          },
         ),
       ),
       drawer: Drawer(
@@ -279,7 +282,9 @@ class MainScreen extends StatelessWidget {
             ),
             BlocBuilder<WorkspacesBloc, WorkspacesState>(
               builder: (context, state) {
-                if (state is WorkspacesLoaded && state.selected != null) {
+                if (state is WorkspacesLoaded &&
+                    state.selected != null &&
+                    state.selected!.role != 'observer') {
                   return ListTile(
                     leading: const Icon(Icons.list_alt),
                     title: const Text('Transaksi Anggota'),
@@ -363,7 +368,9 @@ class MainScreen extends StatelessWidget {
                   ..add(
                     FetchTransactions(
                       state.selected!.id,
-                      state.selected!.memberWorkspaceId,
+                      state.selected!.role == 'observer'
+                          ? null
+                          : state.selected!.memberWorkspaceId,
                       key: '',
                     ),
                   ),
@@ -381,7 +388,9 @@ class MainScreen extends StatelessWidget {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const TransactionsListWidget(),
+                  child: TransactionsListWidget(
+                    isWorkspaceTransactions: state.selected!.role == 'observer',
+                  ),
                 ),
               ),
             );
@@ -436,7 +445,7 @@ class _DropdownItem extends StatelessWidget {
               children: [
                 if (e.role != null)
                   Text(
-                    e.role!.capitalize,
+                    roleToDisplay(e.role!),
                     style: const TextStyle(
                       color: ColorName.white,
                       fontSize: 11,
