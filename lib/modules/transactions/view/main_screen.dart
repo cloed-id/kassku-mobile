@@ -31,6 +31,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = GetIt.I<UserHelper>().getUser();
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -77,9 +79,11 @@ class MainScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Text(
-                        'Kassku Mobile',
-                        style: TextStyle(
+                      Text(
+                        user != null
+                            ? user.username.capitalize
+                            : 'Kassku Mobile',
+                        style: const TextStyle(
                           color: ColorName.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,

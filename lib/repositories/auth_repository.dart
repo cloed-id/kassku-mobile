@@ -10,12 +10,41 @@ import 'package:kassku_mobile/utils/exceptions.dart';
 import 'package:kassku_mobile/utils/typedefs.dart';
 
 class AuthRepository extends BaseRepository {
-Future<BaseResponse<User>> submitLogin(
+  Future<BaseResponse<User>> submitLogin(
     String username,
     String password,
   ) async {
     final response = await post(
       ApiEndPoint.kApiLogin,
+      data: {
+        'username': username,
+        'password': password,
+      },
+    );
+
+    if (response.status == ResponseStatus.success) {
+      final data = response.data! as MapString;
+      final rawData = data['data'] as MapString;
+      final token = data['token'] as String;
+
+      final user = User.fromJson(rawData);
+      GetIt.I<HiveService>().storeUser(user);
+
+      final storage = GetIt.I<FlutterSecureStorage>();
+
+      await storage.write(key: kAccessToken, value: token);
+
+      return BaseResponse.success(user);
+    }
+    throw CustomExceptionString(response.message ?? 'Unknown error');
+  }
+
+  Future<BaseResponse<User>> submitRegister(
+    String username,
+    String password,
+  ) async {
+    final response = await post(
+      ApiEndPoint.kApiRegister,
       data: {
         'username': username,
         'password': password,

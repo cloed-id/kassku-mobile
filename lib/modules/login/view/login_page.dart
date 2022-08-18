@@ -5,20 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kassku_mobile/gen/assets.gen.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/modules/login/bloc/login_bloc.dart';
+import 'package:kassku_mobile/modules/login/cubit/form_key_cubit.dart';
 import 'package:kassku_mobile/modules/login/cubit/form_values_cubit.dart';
+import 'package:kassku_mobile/modules/login/cubit/visibility_password_cubit.dart';
+import 'package:kassku_mobile/modules/login/view/register_screen.dart';
+import 'package:kassku_mobile/utils/extensions/widget_extension.dart';
 import 'package:kassku_mobile/utils/screen_size.dart';
-
-class _VisibilityPasswordCubit extends Cubit<bool> {
-  _VisibilityPasswordCubit() : super(false);
-
-  void toggle() => emit(!state);
-}
-
-class _FormKeyCubit extends Cubit<GlobalKey<FormState>> {
-  _FormKeyCubit() : super(GlobalKey<FormState>());
-
-  void change() => emit(GlobalKey<FormState>());
-}
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -55,10 +47,10 @@ class LoginPage extends StatelessWidget {
                   child: MultiBlocProvider(
                     providers: [
                       BlocProvider(
-                        create: (context) => _VisibilityPasswordCubit(),
+                        create: (context) => VisibilityPasswordCubit(),
                       ),
                       BlocProvider(
-                        create: (context) => _FormKeyCubit(),
+                        create: (context) => FormKeyCubit(),
                       ),
                       BlocProvider(
                         create: (context) => LoginBloc(),
@@ -95,7 +87,7 @@ class _FormBodyWidget extends StatelessWidget {
   const _FormBodyWidget();
 
   void _submit(BuildContext context) {
-    final formKey = context.read<_FormKeyCubit>().state;
+    final formKey = context.read<FormKeyCubit>().state;
 
     if (!formKey.currentState!.validate()) return;
 
@@ -111,10 +103,10 @@ class _FormBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isVisible = context.watch<_VisibilityPasswordCubit>().state;
+    final isVisible = context.watch<VisibilityPasswordCubit>().state;
 
     return Form(
-      key: context.read<_FormKeyCubit>().state,
+      key: context.read<FormKeyCubit>().state,
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -198,7 +190,7 @@ class _FormBodyWidget extends StatelessWidget {
                       ),
                       suffixIcon: InkWell(
                         onTap: () {
-                          context.read<_VisibilityPasswordCubit>().toggle();
+                          context.read<VisibilityPasswordCubit>().toggle();
                         },
                         child: Icon(
                           !isVisible
@@ -220,7 +212,9 @@ class _FormBodyWidget extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: MaterialButton(
                       child: const Text('Daftar'),
-                      onPressed: () {},
+                      onPressed: () {
+                        const RegisterScreen().showSheet<void>(context);
+                      },
                     ),
                   ),
                   const SizedBox(height: 28),

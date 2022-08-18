@@ -1,9 +1,11 @@
-part of 'login_bloc.dart';
+part of 'register_bloc.dart';
 
-abstract class LoginEvent extends Equatable {}
+abstract class RegisterEvent extends Equatable {}
 
-class LoginSubmitEvent extends LoginEvent {
-  LoginSubmitEvent({
+
+
+class RegisterSubmitEvent extends RegisterEvent {
+  RegisterSubmitEvent({
     required this.email,
     required this.password,
   });

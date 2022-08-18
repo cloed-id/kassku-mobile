@@ -6,6 +6,7 @@ const kAccessToken = 'access_token';
 
 class ApiEndPoint {
   static const kApiLogin = '/login';
+  static const kApiRegister = '/register';
   static const kApiWorkspaces = '/v1/workspaces';
   static const kApiTransactions = '/transactions';
   static const kApiCategories = '/categories';
