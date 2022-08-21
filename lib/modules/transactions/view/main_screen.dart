@@ -16,6 +16,7 @@ import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_pare
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/form_add_member_dialog.dart';
+import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_chart_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
@@ -192,6 +193,24 @@ class MainScreen extends StatelessWidget {
                   )
                 ],
               ),
+            ),
+            BlocBuilder<WorkspacesBloc, WorkspacesState>(
+              builder: (context, state) {
+                if (state is WorkspacesLoaded && state.selected != null) {
+                  if (state.selected!.role == 'admin') {
+                    return ListTile(
+                      leading: const Icon(Icons.bar_chart),
+                      title: const Text('Grafik Transaksi'),
+                      onTap: () {
+                        TransactionChartWidget(
+                          workspaceId: state.selected!.id,
+                        ).showSheet<void>(context);
+                      },
+                    );
+                  }
+                }
+                return const SizedBox();
+              },
             ),
             BlocBuilder<WorkspacesBloc, WorkspacesState>(
               builder: (context, state) {
