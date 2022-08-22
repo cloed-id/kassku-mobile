@@ -63,7 +63,7 @@ class __TransactionChartBodyWidgetState
         child: Card(
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          color: ColorName.primary,
+          color: ColorName.secondary,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -228,7 +228,7 @@ class __TransactionChartBodyWidgetState
 
   Widget leftTitles(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: Color(0xff7589a2),
+      color: Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: 12,
     );
@@ -247,7 +247,7 @@ class __TransactionChartBodyWidgetState
     final text = Text(
       ft.format(date),
       style: const TextStyle(
-        color: Color(0xff7589a2),
+        color: Colors.white,
         fontWeight: FontWeight.bold,
         fontSize: 14,
       ),

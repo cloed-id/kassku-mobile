@@ -36,6 +36,7 @@ class MainScreen extends StatelessWidget {
     final user = GetIt.I<UserHelper>().getUser();
 
     return Scaffold(
+      backgroundColor: ColorName.background,
       appBar: AppBar(
         title: BlocBuilder<WorkspacesBloc, WorkspacesState>(
           builder: (context, state) {
@@ -101,7 +102,10 @@ class MainScreen extends StatelessWidget {
                           if (snapshot.hasData) {
                             return Text(
                               'v${snapshot.data!.version}',
-                              style: const TextStyle(color: ColorName.white),
+                              style: const TextStyle(
+                                color: ColorName.white,
+                                fontSize: 12,
+                              ),
                             );
                           }
 
@@ -123,15 +127,18 @@ class MainScreen extends StatelessWidget {
                               children: [
                                 const Text(
                                   'Area Kerja',
-                                  style: TextStyle(color: ColorName.white),
+                                  style: TextStyle(
+                                    color: ColorName.white,
+                                    fontSize: 18,
+                                  ),
                                 ),
-                                const SizedBox(width: 4),
-                                InkWell(
-                                  child: const Icon(
+                                const Spacer(),
+                                IconButton(
+                                  icon: const Icon(
                                     Icons.add,
                                     color: ColorName.white,
                                   ),
-                                  onTap: () {
+                                  onPressed: () {
                                     final workspaceBloc =
                                         context.read<WorkspacesBloc>();
                                     BlocProvider.value(
@@ -449,6 +456,29 @@ class _DropdownItem extends StatelessWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (e.role != null)
+                  Text(
+                    roleToDisplay(e.role!),
+                    style: const TextStyle(
+                      color: ColorName.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                Text(
+                  '${e.members.length.toString()} anggota',
+                  style: const TextStyle(
+                    color: ColorName.white,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(e.name.capitalize),
                 if (e.balance != null)
@@ -459,32 +489,6 @@ class _DropdownItem extends StatelessWidget {
                       fontSize: 11,
                     ),
                   ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                if (e.role != null)
-                  Text(
-                    roleToDisplay(e.role!),
-                    style: const TextStyle(
-                      color: ColorName.white,
-                      fontSize: 11,
-                    ),
-                  ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.people,
-                      color: ColorName.white,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      e.members.length.toString(),
-                    ),
-                  ],
-                ),
               ],
             ),
           ],

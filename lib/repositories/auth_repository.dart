@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:kassku_mobile/helpers/one_signal_helper.dart';
 import 'package:kassku_mobile/models/base_response.dart';
 import 'package:kassku_mobile/models/user.dart';
 import 'package:kassku_mobile/repositories/base_repository.dart';
@@ -30,6 +31,8 @@ class AuthRepository extends BaseRepository {
       final user = User.fromJson(rawData);
       GetIt.I<HiveService>().storeUser(user);
 
+      await GetIt.I<OneSignalHelper>().setExternalId(user.id);
+
       final storage = GetIt.I<FlutterSecureStorage>();
 
       await storage.write(key: kAccessToken, value: token);
@@ -58,6 +61,8 @@ class AuthRepository extends BaseRepository {
 
       final user = User.fromJson(rawData);
       GetIt.I<HiveService>().storeUser(user);
+
+      await GetIt.I<OneSignalHelper>().setExternalId(user.id);
 
       final storage = GetIt.I<FlutterSecureStorage>();
 

@@ -191,7 +191,7 @@ class _RegisterBody extends StatelessWidget {
                       child: const SizedBox(
                         width: double.infinity,
                         height: 55,
-                        child: Center(child: Text('Register')),
+                        child: Center(child: Text('Daftar')),
                       ),
                     ),
                   );

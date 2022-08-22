@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/utils/screen_size.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -60,7 +61,7 @@ extension WidgetExtension on Widget {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: ColorName.background,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
@@ -79,7 +80,7 @@ extension WidgetExtension on Widget {
                     width: 50,
                     height: 8,
                     decoration: const BoxDecoration(
-                      color: Colors.white,
+                      color: ColorName.background,
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                   ),

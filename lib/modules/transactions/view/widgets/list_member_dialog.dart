@@ -88,53 +88,63 @@ class _ListMemberDialog extends StatelessWidget {
                   title += ' - ( Anda )';
                 }
 
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: ColorName.primary,
-                    child: Text(
-                      member.username.substring(0, 1).capitalize,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: ColorName.white,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: ColorName.primary,
+                        child: Text(
+                          member.username.substring(0, 1).capitalize,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: ColorName.white,
+                          ),
+                        ),
                       ),
+                      title: Text(title),
+                      subtitle: Text(member.role.name.capitalize),
+                      trailing: member.balance != null
+                          ? Text(
+                              currencyFormatterNoLeading.format(member.balance))
+                          : null,
+                      onTap: ableToSetBalance
+                          ? () {
+                              final workspaceMemberByParentBloc =
+                                  BlocProvider.of<WorkspaceMemberByParentBloc>(
+                                context,
+                              );
+
+                              final workspacesBloc =
+                                  BlocProvider.of<WorkspacesBloc>(
+                                context,
+                              );
+                              showDialog<void>(
+                                context: context,
+                                builder: (context) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider.value(
+                                      value: workspaceMemberByParentBloc,
+                                    ),
+                                    BlocProvider.value(
+                                      value: workspacesBloc,
+                                    ),
+                                  ],
+                                  child: _SetMemberBalanceDialog(
+                                    workspace: workspace,
+                                    memberId: member.id,
+                                  ),
+                                ),
+                              );
+                            }
+                          : null,
                     ),
                   ),
-                  title: Text(title),
-                  subtitle: Text(member.role.name.capitalize),
-                  trailing: member.balance != null
-                      ? Text(currencyFormatterNoLeading.format(member.balance))
-                      : null,
-                  onTap: ableToSetBalance
-                      ? () {
-                          final workspaceMemberByParentBloc =
-                              BlocProvider.of<WorkspaceMemberByParentBloc>(
-                            context,
-                          );
-
-                          final workspacesBloc =
-                              BlocProvider.of<WorkspacesBloc>(
-                            context,
-                          );
-                          showDialog<void>(
-                            context: context,
-                            builder: (context) => MultiBlocProvider(
-                              providers: [
-                                BlocProvider.value(
-                                  value: workspaceMemberByParentBloc,
-                                ),
-                                BlocProvider.value(
-                                  value: workspacesBloc,
-                                ),
-                              ],
-                              child: _SetMemberBalanceDialog(
-                                workspace: workspace,
-                                memberId: member.id,
-                              ),
-                            ),
-                          );
-                        }
-                      : null,
                 );
               },
             ),

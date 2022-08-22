@@ -37,7 +37,7 @@ class _AppState extends State<App> {
     primaryContainer: ColorName.primaryContainer,
     secondary: ColorName.secondary,
     secondaryContainer: ColorName.secondaryContainer,
-    background: ColorName.background,
+    background: Color.fromARGB(255, 228, 228, 228),
     error: ColorName.errorBackground,
     surface: ColorName.white,
     onPrimary: ColorName.white,
@@ -77,7 +77,7 @@ class _AppBody extends StatelessWidget {
       colorScheme: colorScheme,
       primaryColor: colorScheme.primary,
       backgroundColor: colorScheme.background,
-      textTheme: GoogleFonts.openSansTextTheme(
+      textTheme: GoogleFonts.robotoTextTheme(
         const TextTheme(
           subtitle1: TextStyle(
             color: ColorName.textPrimary,

@@ -17,10 +17,10 @@ class ColorName {
   static const Color infoSecondary = Color(0xFFE6F4F8);
   static const Color infoVariant = Color(0xFFB2EFFF);
   static const Color netral = Color(0xFFC7C7C7);
-  static const Color primary = Color(0xFF244C66);
-  static const Color primaryContainer = Color(0xFF587B89);
-  static const Color secondary = Color(0xFF407D6C);
-  static const Color secondaryContainer = Color(0xFF7DB290);
+  static const Color primary = Color(0xFFA66CFF);
+  static const Color primaryContainer = Color(0xFF9C9EFE);
+  static const Color secondary = Color(0xFFAFB4FF);
+  static const Color secondaryContainer = Color(0xFF9C9EFE);
   static const Color success = Color(0xFF2FA841);
   static const Color successVariant = Color(0xFFB8EBC0);
   static const Color textPrimary = Color(0xFF272727);

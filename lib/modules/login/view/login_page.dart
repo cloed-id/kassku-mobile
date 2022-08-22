@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kassku_mobile/gen/assets.gen.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/modules/login/bloc/login_bloc.dart';
@@ -26,11 +27,21 @@ class LoginPage extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              Container(
-                alignment: ScreenSize.isBelowExtraLargeScreen(context)
-                    ? Alignment.center
-                    : Alignment.topLeft,
-                child: Assets.images.bannerKassku.image(width: 180),
+              // Container(
+              //   alignment: ScreenSize.isBelowExtraLargeScreen(context)
+              //       ? Alignment.center
+              //       : Alignment.topLeft,
+              //   child: Assets.images.bannerKassku.image(width: 180),
+              // ),
+              Text(
+                'KaSSku',
+                style: TextStyle(
+                  color: ColorName.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 45,
+                  fontFamily: GoogleFonts.oswald().fontFamily,
+                  letterSpacing: 5,
+                ),
               ),
               const SizedBox(height: 16),
               Padding(
@@ -206,18 +217,9 @@ class _FormBodyWidget extends StatelessWidget {
                     onFieldSubmitted: (value) => _submit(context),
                   ),
                   const SizedBox(
-                    height: 26,
+                    height: 14,
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: MaterialButton(
-                      child: const Text('Daftar'),
-                      onPressed: () {
-                        const RegisterScreen().showSheet<void>(context);
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 18),
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
                       if (state is LoginLoading) {
@@ -229,7 +231,7 @@ class _FormBodyWidget extends StatelessWidget {
                         );
                       }
                       return Container(
-                        height: 55,
+                        height: 45,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(30),
@@ -258,6 +260,26 @@ class _FormBodyWidget extends StatelessWidget {
                         ),
                       );
                     },
+                  ),
+                  const SizedBox(height: 14),
+                  SizedBox(
+                    height: 45,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        const RegisterScreen().showSheet<void>(context);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        primary: ColorName.secondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const SizedBox(
+                        width: double.infinity,
+                        height: 55,
+                        child: Center(child: Text('Daftar')),
+                      ),
+                    ),
                   ),
                 ],
               ),

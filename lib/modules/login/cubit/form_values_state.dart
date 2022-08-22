@@ -4,7 +4,7 @@ class FormValuesState extends Equatable {
   const FormValuesState(this.email, this.password);
 
   factory FormValuesState.initial() => const FormValuesState(
-        kDebugMode ? 'test10' : '',
+        kDebugMode ? 'test1' : '',
         kDebugMode ? '12345678' : '',
       );
 
