@@ -43,6 +43,7 @@ class _FormAddMemberBodyDialog extends StatelessWidget {
         WorkspaceMemberByParentState>(
       listener: (context, state) {
         if (state is WorkspaceMemberByParentSuccess) {
+          context.read<WorkspacesBloc>().add(const FetchWorkspaces(key: ''));
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           Navigator.of(context).pop();
