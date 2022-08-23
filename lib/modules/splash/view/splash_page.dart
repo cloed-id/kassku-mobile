@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'package:kassku_mobile/gen/assets.gen.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 
 class SplashPage extends StatelessWidget {
@@ -13,7 +13,16 @@ class SplashPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Assets.images.logoKassku.image(width: 100),
+            Text(
+              'KaSSku',
+              style: TextStyle(
+                color: ColorName.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 45,
+                fontFamily: GoogleFonts.oswald().fontFamily,
+                letterSpacing: 5,
+              ),
+            ),
             const SizedBox(height: 20),
             const Text(
               'Kassku | Cloed Indonesia',

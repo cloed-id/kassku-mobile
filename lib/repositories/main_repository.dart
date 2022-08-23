@@ -30,9 +30,9 @@ class MainRepository {
   Dio _setupDio(String lang, {bool isUseLogger = true}) {
     final options = BaseOptions(
       baseUrl: kBaseUrl,
-      connectTimeout: 16000,
-      receiveTimeout: 16000,
-      sendTimeout: 16000,
+      connectTimeout: 32000,
+      receiveTimeout: 32000,
+      sendTimeout: 32000,
       headers: <String, dynamic>{
         'Content-Type': 'application/json',
         'Accept': 'application/json',

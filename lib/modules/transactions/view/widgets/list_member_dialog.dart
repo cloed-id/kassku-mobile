@@ -108,7 +108,7 @@ class _ListMemberDialog extends StatelessWidget {
                         ),
                       ),
                       title: Text(title),
-                      subtitle: Text(member.role.name.capitalize),
+                      subtitle: Text(roleToDisplay(member.role.name)),
                       trailing: member.balance != null
                           ? Text(
                               currencyFormatterNoLeading.format(member.balance))
