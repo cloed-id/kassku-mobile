@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_parent_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
@@ -77,6 +78,23 @@ class _FormAddMemberBodyWidget extends StatelessWidget {
               onChanged: (value) {
                 username = value;
               },
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: ColorName.secondaryContainer,
+              ),
+              child: const Text(
+                'Password member baru sama dengan username',
+                style: TextStyle(
+                  color: ColorName.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
             const SizedBox(height: 16),
             Row(

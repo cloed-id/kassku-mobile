@@ -31,6 +31,10 @@ class WorkspacesSelected extends WorkspacesState {
   const WorkspacesSelected(super.workspaces, super.selected);
 }
 
+class WorkspacesCalledTutorial extends WorkspacesState {
+  const WorkspacesCalledTutorial(super.workspaces, super.selected);
+}
+
 class WorkspacesError extends WorkspacesState {
   WorkspacesError(WorkspacesState state, this.message)
       : super(state.workspaces, state.selected);

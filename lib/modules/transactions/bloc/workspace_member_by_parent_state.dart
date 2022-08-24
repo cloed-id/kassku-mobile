@@ -22,6 +22,10 @@ class WorkspaceMemberByParentLoaded extends WorkspaceMemberByParentState {
   const WorkspaceMemberByParentLoaded(super.memberWorkspaces);
 }
 
+class WorkspaceMemberByParentSetBalanceSuccess extends WorkspaceMemberByParentState {
+  const WorkspaceMemberByParentSetBalanceSuccess(super.memberWorkspaces);
+}
+
 class WorkspaceMemberByParentSuccess extends WorkspaceMemberByParentState {
   const WorkspaceMemberByParentSuccess(super.memberWorkspaces);
 }

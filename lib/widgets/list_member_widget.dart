@@ -116,95 +116,98 @@ class ListMemberWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemCount: members.length,
-            itemBuilder: (context, index) {
-              final member = members[index];
-              final isYou = member.id == workspace.memberWorkspaceId;
-              var title = member.username.capitalize;
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: members.length,
+              itemBuilder: (context, index) {
+                final member = members[index];
+                final isYou = member.id == workspace.memberWorkspaceId;
+                var title = member.username.capitalize;
 
-              if (isYou) {
-                title += ' - ( Anda )';
-              }
+                if (isYou) {
+                  title += ' - ( Anda )';
+                }
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: ListTile(
-                    isThreeLine: true,
-                    leading: CircleAvatar(
-                      backgroundColor: ColorName.primary,
-                      child: Text(
-                        member.username.substring(0, 1).capitalize,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: ColorName.white,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListTile(
+                      isThreeLine: true,
+                      leading: CircleAvatar(
+                        backgroundColor: ColorName.primary,
+                        child: Text(
+                          member.username.substring(0, 1).capitalize,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: ColorName.white,
+                          ),
                         ),
                       ),
-                    ),
-                    title: Text(title),
-                    subtitle: SizedBox(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            roleToDisplay(member.role.name),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w300,
+                      title: Text(title),
+                      subtitle: SizedBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              roleToDisplay(member.role.name),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            member.balance != null
-                                ? currencyFormatter.format(member.balance)
-                                : 'Saldo belum di set',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                            const SizedBox(height: 8),
+                            Text(
+                              member.balance != null
+                                  ? currencyFormatter.format(member.balance)
+                                  : 'Saldo belum di set',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      trailing: PopupMenuButton(
+                        onSelected: (value) {
+                          switch (value) {
+                            case 'set_amount':
+                              if (ableToSetBalance) {
+                                _onSetBalance(context, member.id);
+                              }
+                          }
+                        },
+                        icon: const Icon(Icons.more_vert),
+                        itemBuilder: (context) {
+                          return [
+                            if (ableToSetBalance)
+                              PopupMenuItem<String>(
+                                value: 'set_amount',
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.edit),
+                                    SizedBox(width: 8),
+                                    Text('Tambah Saldo'),
+                                  ],
+                                ),
+                              ),
+                          ];
+                        },
+                      ),
+                      onTap: () => ableToSetBalance
+                          ? _onSetBalance(context, member.id)
+                          : null,
                     ),
-                    trailing: PopupMenuButton(
-                      onSelected: (value) {
-                        switch (value) {
-                          case 'set_amount':
-                            if (ableToSetBalance) {
-                              _onSetBalance(context, member.id);
-                            }
-                        }
-                      },
-                      icon: const Icon(Icons.more_vert),
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem<String>(
-                            value: 'set_amount',
-                            child: Row(
-                              children: const [
-                                Icon(Icons.edit),
-                                SizedBox(width: 8),
-                                Text('Tambah Saldo'),
-                              ],
-                            ),
-                          ),
-                        ];
-                      },
-                    ),
-                    onTap: () => ableToSetBalance
-                        ? _onSetBalance(context, member.id)
-                        : null,
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -277,9 +280,6 @@ class _SetMemberBalanceDialog extends StatelessWidget {
                         );
                     GetIt.I<FlashMessageHelper>()
                         .showTopFlash('Berhasil perbaharui saldo');
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
                   }
                 },
                 child: TextButton(

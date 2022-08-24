@@ -71,7 +71,7 @@ class WorkspaceMemberByParentBloc
       },
     );
 
-    emit(WorkspaceMemberByParentSuccess(state.memberWorkspaces));
+    emit(WorkspaceMemberByParentSetBalanceSuccess(state.memberWorkspaces));
     emit(WorkspaceMemberByParentLoaded(state.memberWorkspaces));
   }
 }

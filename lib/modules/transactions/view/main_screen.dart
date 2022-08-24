@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
-import 'package:kassku_mobile/helpers/navigation_helper.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/category.dart';
 import 'package:kassku_mobile/models/workspace.dart';
@@ -17,6 +16,7 @@ import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_chart_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_list_widget.dart';
+import 'package:kassku_mobile/modules/tutorial/view/tutorial_page.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 import 'package:kassku_mobile/utils/extensions/widget_extension.dart';
@@ -250,8 +250,16 @@ class MainScreen extends StatelessWidget {
                           memberId: workspaceState.selected!.memberWorkspaceId,
                         ),
                       ),
-                    child: BlocBuilder<WorkspaceMemberByParentBloc,
+                    child: BlocConsumer<WorkspaceMemberByParentBloc,
                         WorkspaceMemberByParentState>(
+                      listener: (context, workspaceMemberState) {
+                        if (workspaceMemberState
+                            is WorkspaceMemberByParentSuccess) {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        }
+                      },
                       builder: (context, workspaceMemberState) {
                         return ListTile(
                           leading: const Icon(Icons.people_alt_outlined),
@@ -275,11 +283,7 @@ class MainScreen extends StatelessWidget {
                                 members: workspaceMemberState.memberWorkspaces,
                                 workspace: workspaceState.selected!,
                                 ableToSetBalance: true,
-                                onAddSuccess: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                },
+                                onAddSuccess: () {},
                               ),
                             ).showSheet<void>(context);
                           },
@@ -367,15 +371,18 @@ class MainScreen extends StatelessWidget {
                 .showTopFlash('Area kerja berhasil dibuat');
             context.read<WorkspacesBloc>().add(const FetchWorkspaces(key: ''));
             Navigator.pop(context);
-          } else if (state is WorkspacesLoaded) {
-            final isGoToTutorial = (state.workspaces.isEmpty) ||
-                state.selected != null &&
-                    state.selected!.members.length == 1 &&
-                    state.workspaces.length == 2;
-
-            if (isGoToTutorial) {
-              GetIt.I<NavigationHelper>().pushToTutorial();
-            }
+          } else if (state is WorkspacesCalledTutorial) {
+            Navigator.of(context)
+                .push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const TutorialPage(),
+                  ),
+                )
+                .then(
+                  (value) => context
+                      .read<WorkspacesBloc>()
+                      .add(const FetchWorkspaces(key: '')),
+                );
           }
         },
         builder: (context, state) {

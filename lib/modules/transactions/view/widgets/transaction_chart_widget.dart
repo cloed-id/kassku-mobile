@@ -5,13 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/transactions_chart_bloc.dart';
 import 'package:kassku_mobile/utils/functions.dart';
-import 'package:logger/logger.dart';
 
 class TransactionChartWidget extends StatelessWidget {
   const TransactionChartWidget({
-    Key? key,
+    super.key,
     required this.workspaceId,
-  }) : super(key: key);
+  });
 
   final String workspaceId;
 
