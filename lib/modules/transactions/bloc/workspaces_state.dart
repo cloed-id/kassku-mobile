@@ -7,7 +7,7 @@ abstract class WorkspacesState extends Equatable {
   final Workspace? selected;
 
   @override
-  List<Object?> get props => [workspaces];
+  List<Object?> get props => [workspaces, selected?.id];
 }
 
 class WorkspacesInitial extends WorkspacesState {

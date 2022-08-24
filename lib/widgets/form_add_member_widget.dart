@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_parent_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
-import 'package:kassku_mobile/services/hive_service.dart';
 
 class _SelectedRoleCubit extends Cubit<String?> {
   _SelectedRoleCubit() : super(null);
@@ -12,20 +11,24 @@ class _SelectedRoleCubit extends Cubit<String?> {
   void change(String role) => emit(role);
 }
 
-class FormAddMemberDialog extends StatelessWidget {
-  const FormAddMemberDialog({super.key});
+class FormAddMemberWidget extends StatelessWidget {
+  const FormAddMemberWidget({super.key, required this.onAddSuccess});
+
+  final VoidCallback onAddSuccess;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => _SelectedRoleCubit(),
-      child: const _FormAddMemberBodyDialog(),
+      child: _FormAddMemberBodyWidget(onAddSuccess: onAddSuccess),
     );
   }
 }
 
-class _FormAddMemberBodyDialog extends StatelessWidget {
-  const _FormAddMemberBodyDialog({super.key});
+class _FormAddMemberBodyWidget extends StatelessWidget {
+  const _FormAddMemberBodyWidget({super.key, required this.onAddSuccess});
+
+  final VoidCallback onAddSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +47,7 @@ class _FormAddMemberBodyDialog extends StatelessWidget {
       listener: (context, state) {
         if (state is WorkspaceMemberByParentSuccess) {
           context.read<WorkspacesBloc>().add(const FetchWorkspaces(key: ''));
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
+          onAddSuccess.call();
         }
       },
       child: Padding(

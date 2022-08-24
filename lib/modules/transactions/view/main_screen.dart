@@ -6,27 +6,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
+import 'package:kassku_mobile/helpers/navigation_helper.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/category.dart';
-import 'package:kassku_mobile/models/member_workspace.dart';
 import 'package:kassku_mobile/models/workspace.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/categories_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/transactions_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_parent_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
-import 'package:kassku_mobile/modules/transactions/view/widgets/form_add_member_dialog.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_chart_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 import 'package:kassku_mobile/utils/extensions/widget_extension.dart';
 import 'package:kassku_mobile/utils/functions.dart';
+import 'package:kassku_mobile/widgets/form_workspace_widget.dart';
+import 'package:kassku_mobile/widgets/list_member_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-part 'package:kassku_mobile/modules/transactions/view/widgets/form_workspace_dialog.dart';
 part 'package:kassku_mobile/modules/transactions/view/widgets/form_transaction_dialog.dart';
-part 'package:kassku_mobile/modules/transactions/view/widgets/list_member_dialog.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -53,7 +52,7 @@ class MainScreen extends StatelessWidget {
                     Text(
                       'Saldo: ${currencyFormatterNoLeading.format(state.selected!.balance)}',
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -143,7 +142,7 @@ class MainScreen extends StatelessWidget {
                                         context.read<WorkspacesBloc>();
                                     BlocProvider.value(
                                       value: workspaceBloc,
-                                      child: const _FormWorkspaceDialog(),
+                                      child: const FormWorkspaceWidget(),
                                     ).showCustomDialog<void>(context);
                                   },
                                 )
@@ -271,11 +270,16 @@ class MainScreen extends StatelessWidget {
                                 ),
                                 BlocProvider.value(value: workspacesBloc)
                               ],
-                              child: _ListMemberDialog(
+                              child: ListMemberWidget(
                                 label: 'Anggota Anda',
                                 members: workspaceMemberState.memberWorkspaces,
                                 workspace: workspaceState.selected!,
                                 ableToSetBalance: true,
+                                onAddSuccess: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
                               ),
                             ).showSheet<void>(context);
                           },
@@ -294,11 +298,16 @@ class MainScreen extends StatelessWidget {
                     leading: const Icon(Icons.people),
                     title: const Text('Anggota Area Kerja'),
                     onTap: () {
-                      _ListMemberDialog(
+                      ListMemberWidget(
                         label:
                             'Anggota Area Kerja ${state.selected!.name.capitalizeFirstOfEach}',
                         members: state.selected!.members,
                         workspace: state.selected!,
+                        onAddSuccess: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
                       ).showSheet<void>(context);
                     },
                   );
@@ -357,6 +366,16 @@ class MainScreen extends StatelessWidget {
             GetIt.I<FlashMessageHelper>()
                 .showTopFlash('Area kerja berhasil dibuat');
             context.read<WorkspacesBloc>().add(const FetchWorkspaces(key: ''));
+            Navigator.pop(context);
+          } else if (state is WorkspacesLoaded) {
+            final isGoToTutorial = (state.workspaces.isEmpty) ||
+                state.selected != null &&
+                    state.selected!.members.length == 1 &&
+                    state.workspaces.length == 2;
+
+            if (isGoToTutorial) {
+              GetIt.I<NavigationHelper>().pushToTutorial();
+            }
           }
         },
         builder: (context, state) {
@@ -378,7 +397,7 @@ class MainScreen extends StatelessWidget {
                         final workspaceBloc = context.read<WorkspacesBloc>();
                         BlocProvider.value(
                           value: workspaceBloc,
-                          child: const _FormWorkspaceDialog(),
+                          child: const FormWorkspaceWidget(),
                         ).showCustomDialog<void>(context);
                       },
                       child: const Text('silahkan buat'),

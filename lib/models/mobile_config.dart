@@ -15,9 +15,11 @@ class MobileConfig extends HiveObject {
   @HiveField(1)
   final String? selectedWorkspace;
 
+
   MobileConfig copyWith({
     bool? isInitialOpen,
     String? selectedWorkspace,
+    bool? isTutorialVisible,
   }) {
     return MobileConfig(
       isInitialOpen: isInitialOpen ?? this.isInitialOpen,

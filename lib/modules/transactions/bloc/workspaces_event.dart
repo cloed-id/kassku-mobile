@@ -28,7 +28,7 @@ class SelectWorkspace extends WorkspacesEvent {
   final Workspace workspace;
 
   @override
-  List<Object> get props => [workspace];
+  List<Object> get props => [workspace.id];
 }
 
 class FetchWorkspace extends WorkspacesEvent {

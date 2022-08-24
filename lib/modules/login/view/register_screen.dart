@@ -125,6 +125,8 @@ class _RegisterBody extends StatelessWidget {
                 validator: (value) {
                   if (value != null && value.isEmpty) {
                     return 'Password tidak boleh kosong';
+                  } else if (value!.length < 8) {
+                    return 'Password harus lebih dari 8 karakter.';
                   }
                   return null;
                 },

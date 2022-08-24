@@ -116,6 +116,8 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
 
     final data = result.data as Workspace;
 
+    add(SelectWorkspace(workspace: data));
+
     emit(WorkspacesCreated([data, ...state.workspaces], data));
     emit(WorkspacesLoaded(state.workspaces, state.selected));
   }

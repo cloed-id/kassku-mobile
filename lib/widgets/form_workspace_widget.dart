@@ -1,7 +1,11 @@
-part of 'package:kassku_mobile/modules/transactions/view/main_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:kassku_mobile/helpers/flash_message_helper.dart';
+import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 
-class _FormWorkspaceDialog extends StatelessWidget {
-  const _FormWorkspaceDialog({super.key});
+class FormWorkspaceWidget extends StatelessWidget {
+  const FormWorkspaceWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,6 @@ class _FormWorkspaceDialog extends StatelessWidget {
                 }
 
                 context.read<WorkspacesBloc>().add(CreateWorkspace(name: name));
-                Navigator.pop(context);
               },
               child: const Text('Buat Area Kerja'),
             ),

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kassku_mobile/gen/assets.gen.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/modules/login/bloc/login_bloc.dart';
 import 'package:kassku_mobile/modules/login/cubit/form_key_cubit.dart';

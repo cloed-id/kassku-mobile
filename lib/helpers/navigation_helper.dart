@@ -5,6 +5,7 @@ import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/modules/login/view/login_page.dart';
 import 'package:kassku_mobile/modules/main/view/main_page.dart';
 import 'package:kassku_mobile/modules/splash/view/splash_page.dart';
+import 'package:kassku_mobile/modules/tutorial/view/tutorial_page.dart';
 
 class NavigationHelper {
   final GoRouter goRouter = GoRouter(
@@ -59,6 +60,12 @@ class NavigationHelper {
         ),
         redirect: redirectWhenUnauthenticate,
       ),
+      GoRoute(
+        path: '/main/tutorial',
+        name: 'tutorialpage',
+        builder: (context, state) => const TutorialPage(),
+        redirect: redirectWhenUnauthenticate,
+      ),
     ],
   );
 
@@ -104,5 +111,9 @@ class NavigationHelper {
 
   void goToTransactions() {
     goRouter.replaceNamed('mainpage');
+  }
+
+  void pushToTutorial() {
+    goRouter.pushNamed('tutorialpage');
   }
 }
