@@ -242,7 +242,7 @@ class __TransactionChartBodyWidgetState
   Widget bottomTitles(double value, TitleMeta meta) {
     final millis = value.toInt();
     final date = DateTime.fromMillisecondsSinceEpoch(millis);
-    final ft = DateFormat.yMd('id');
+    final ft = DateFormat('dd/MM', 'id');
 
     final text = Text(
       ft.format(date),
