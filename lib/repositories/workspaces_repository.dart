@@ -93,6 +93,7 @@ class WorkspacesRepository extends BaseRepository {
     String username,
     String role,
     String workspaceId,
+    List<String> permissionIds,
   ) async {
     final user = GetIt.I<UserHelper>().getUser();
 
@@ -107,6 +108,7 @@ class WorkspacesRepository extends BaseRepository {
           'username': username,
           'role': role,
           'parent_username': user.username,
+          'permission_ids': permissionIds,
         }
       ],
     );

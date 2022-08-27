@@ -37,11 +37,13 @@ class CreateWorkspaceMemberByParent extends WorkspaceMemberByParentEvent {
     required this.workspaceId,
     required this.username,
     required this.role,
+    required this.permissionIds,
   });
 
   final String workspaceId;
   final String username;
   final String role;
+  final List<String> permissionIds;
 
   @override
   List<Object> get props => [workspaceId, username];

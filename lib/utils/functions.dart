@@ -26,3 +26,21 @@ String roleToDisplay(String role) {
       return 'Lainnya';
   }
 }
+
+String listPermissionsToDisplay(List<String> permissions) {
+  if (permissions.isEmpty) {
+    return '';
+  }
+
+  final list = <String>[];
+
+  for (final element in permissions) {
+    if (element == 'create_income') {
+      list.add('Pemasukan');
+    } else if (element == 'create_expense') {
+      list.add('Pengeluaran');
+    }
+  }
+
+  return list.join(', ');
+}

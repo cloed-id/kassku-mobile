@@ -27,6 +27,7 @@ class WorkspaceMemberByParentBloc
         event.username,
         event.role,
         event.workspaceId,
+        event.permissionIds,
       ),
       onError: (e) {
         emit(WorkspaceMemberByParentInitial());

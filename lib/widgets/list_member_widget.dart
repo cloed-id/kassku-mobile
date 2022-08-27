@@ -164,6 +164,14 @@ class ListMemberWidget extends StatelessWidget {
                                 fontWeight: FontWeight.w300,
                               ),
                             ),
+                            const SizedBox(height: 4),
+                            Text(
+                              listPermissionsToDisplay(member.permissions),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 12,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             Text(
                               member.balance != null

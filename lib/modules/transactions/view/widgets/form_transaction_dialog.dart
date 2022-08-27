@@ -82,6 +82,8 @@ class _FormTransactionBodyDialogState
 
   @override
   Widget build(BuildContext context) {
+    final workspace = context.watch<WorkspacesBloc>().state.selected!;
+
     return BlocListener<TransactionsBloc, TransactionsState>(
       listener: (context, state) {
         if (state is TransactionsCreated) {
@@ -118,45 +120,56 @@ class _FormTransactionBodyDialogState
               builder: (context, state) {
                 return Row(
                   children: [
-                    ChoiceChip(
-                      label: Text(
-                        'Pemasukan',
-                        style: TextStyle(
-                          color: state == TransactionType.income
-                              ? Colors.white
-                              : Colors.black,
+                    if (workspace.role == 'admin' ||
+                        workspace.permissions.contains('create_income'))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: ChoiceChip(
+                          label: Text(
+                            'Pemasukan',
+                            style: TextStyle(
+                              color: state == TransactionType.income
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                          selected: state == TransactionType.income,
+                          selectedColor: ColorName.primary,
+                          onSelected: (selected) {
+                            if (selected) {
+                              context
+                                  .read<_TransactionTypeCubit>()
+                                  .changeTransactionType(
+                                      TransactionType.income);
+                            }
+                          },
                         ),
                       ),
-                      selected: state == TransactionType.income,
-                      selectedColor: ColorName.primary,
-                      onSelected: (selected) {
-                        if (selected) {
-                          context
-                              .read<_TransactionTypeCubit>()
-                              .changeTransactionType(TransactionType.income);
-                        }
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    ChoiceChip(
-                      label: Text(
-                        'Pengeluaran',
-                        style: TextStyle(
-                          color: state == TransactionType.expense
-                              ? Colors.white
-                              : Colors.black,
+                    if (workspace.role == 'admin' ||
+                        workspace.permissions.contains('create_expense'))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: ChoiceChip(
+                          label: Text(
+                            'Pengeluaran',
+                            style: TextStyle(
+                              color: state == TransactionType.expense
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                          selected: state == TransactionType.expense,
+                          selectedColor: ColorName.primary,
+                          onSelected: (selected) {
+                            if (selected) {
+                              context
+                                  .read<_TransactionTypeCubit>()
+                                  .changeTransactionType(
+                                      TransactionType.expense);
+                            }
+                          },
                         ),
                       ),
-                      selected: state == TransactionType.expense,
-                      selectedColor: ColorName.primary,
-                      onSelected: (selected) {
-                        if (selected) {
-                          context
-                              .read<_TransactionTypeCubit>()
-                              .changeTransactionType(TransactionType.expense);
-                        }
-                      },
-                    ),
                   ],
                 );
               },
