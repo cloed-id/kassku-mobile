@@ -227,6 +227,7 @@ class _TutorialBodyWidget extends StatelessWidget {
                                       onAddSuccess: () {
                                         Navigator.of(context).pop();
                                       },
+                                      onSetBalanceSuccess: () {},
                                     ),
                                   );
                                 },

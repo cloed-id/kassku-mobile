@@ -19,7 +19,8 @@ class ListMemberWidget extends StatelessWidget {
     required this.label,
     required this.members,
     required this.workspace,
-    required this.onAddSuccess,
+    this.onAddSuccess,
+    this.onSetBalanceSuccess,
     this.ableToSetBalance = false,
   });
 
@@ -27,7 +28,8 @@ class ListMemberWidget extends StatelessWidget {
   final bool ableToSetBalance;
   final List<MemberWorkspace> members;
   final Workspace workspace;
-  final VoidCallback onAddSuccess;
+  final VoidCallback? onAddSuccess;
+  final VoidCallback? onSetBalanceSuccess;
 
   void _openAddMemberDialog(BuildContext context) {
     final workspaceMemberByParentBloc =
@@ -65,6 +67,7 @@ class ListMemberWidget extends StatelessWidget {
         child: _SetMemberBalanceDialog(
           workspace: workspace,
           memberId: memberId,
+          onSetBalanceSuccess: onSetBalanceSuccess,
         ),
       ),
     );
@@ -228,10 +231,12 @@ class _SetMemberBalanceDialog extends StatelessWidget {
     super.key,
     required this.workspace,
     required this.memberId,
+    required this.onSetBalanceSuccess,
   });
 
   final Workspace workspace;
   final String memberId;
+  final VoidCallback? onSetBalanceSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -271,7 +276,7 @@ class _SetMemberBalanceDialog extends StatelessWidget {
               BlocListener<WorkspaceMemberByParentBloc,
                   WorkspaceMemberByParentState>(
                 listener: (context, state) {
-                  if (state is WorkspaceMemberByParentSuccess) {
+                  if (state is WorkspaceMemberByParentSetBalanceSuccess) {
                     context.read<WorkspaceMemberByParentBloc>().add(
                           FetchWorkspaceMemberByParent(
                             memberId: memberId,
@@ -280,6 +285,7 @@ class _SetMemberBalanceDialog extends StatelessWidget {
                         );
                     GetIt.I<FlashMessageHelper>()
                         .showTopFlash('Berhasil perbaharui saldo');
+                    onSetBalanceSuccess?.call();
                   }
                 },
                 child: TextButton(

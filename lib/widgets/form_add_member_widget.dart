@@ -15,7 +15,7 @@ class _SelectedRoleCubit extends Cubit<String?> {
 class FormAddMemberWidget extends StatelessWidget {
   const FormAddMemberWidget({super.key, required this.onAddSuccess});
 
-  final VoidCallback onAddSuccess;
+  final VoidCallback? onAddSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class FormAddMemberWidget extends StatelessWidget {
 class _FormAddMemberBodyWidget extends StatelessWidget {
   const _FormAddMemberBodyWidget({super.key, required this.onAddSuccess});
 
-  final VoidCallback onAddSuccess;
+  final VoidCallback? onAddSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class _FormAddMemberBodyWidget extends StatelessWidget {
       listener: (context, state) {
         if (state is WorkspaceMemberByParentSuccess) {
           context.read<WorkspacesBloc>().add(const FetchWorkspaces(key: ''));
-          onAddSuccess.call();
+          onAddSuccess?.call();
         }
       },
       child: Padding(
