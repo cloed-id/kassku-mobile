@@ -169,9 +169,9 @@ class _FormAddMemberBodyWidget extends StatelessWidget {
               const SizedBox(height: 16),
               BlocBuilder<_SelectedRoleCubit, String?>(
                 builder: (context, state) {
-                  // if (state == null || state == 'observer') {
-                  //   return const SizedBox();
-                  // }
+                  if (state == null || state == 'observer') {
+                    return const SizedBox();
+                  }
 
                   return BlocBuilder<_SelectedPermissionsCubit, List<String>>(
                     builder: (context, state) {
@@ -279,8 +279,9 @@ class _FormAddMemberBodyWidget extends StatelessWidget {
                       return;
                     }
 
-                    if (permissionIds.isEmpty) {
-                      GetIt.I<FlashMessageHelper>().showError(
+                    if (permissionIds.isEmpty &&
+                        (role == 'head' || role == 'finance')) {
+                      return GetIt.I<FlashMessageHelper>().showError(
                         'Izin anggota belum dipilih',
                       );
                     }

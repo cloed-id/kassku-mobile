@@ -412,15 +412,23 @@ class MainScreen extends StatelessWidget {
             } else if (state is WorkspacesCalledTutorial) {
               Navigator.of(context)
                   .push(
-                    MaterialPageRoute<void>(
-                      builder: (context) => const TutorialPage(),
-                    ),
-                  )
-                  .then(
-                    (value) => context
-                        .read<WorkspacesBloc>()
-                        .add(const FetchWorkspaces(key: '')),
-                  );
+                MaterialPageRoute<void>(
+                  builder: (context) => const TutorialPage(),
+                ),
+              )
+                  .then((value) {
+                context
+                    .read<WorkspacesBloc>()
+                    .add(const FetchWorkspaces(key: ''));
+
+                context.read<TransactionsBloc>().add(
+                      FetchTransactions(
+                        workspacesState.selected!.id,
+                        workspacesState.selected!.memberWorkspaceId,
+                        key: '',
+                      ),
+                    );
+              });
             }
           },
           builder: (context, state) {
