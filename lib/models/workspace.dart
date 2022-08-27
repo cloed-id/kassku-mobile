@@ -12,11 +12,13 @@ class Workspace {
     this.updatedAt,
     this.description,
     this.name,
+    this.sumBalanceMember,
     this.admin,
     this.members,
     this.memberWorkspaceId,
     this.balance,
     this.role,
+    this.permissions,
   );
 
   factory Workspace.fromJson(Map<String, dynamic> json) =>
@@ -36,6 +38,9 @@ class Workspace {
   @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
 
+  @JsonKey(name: 'sum_balance_members')
+  final int? sumBalanceMember;
+
   final User admin;
 
   final List<MemberWorkspace> members;
@@ -46,4 +51,6 @@ class Workspace {
   final num? balance;
 
   final String? role;
+
+  final List<String> permissions;
 }

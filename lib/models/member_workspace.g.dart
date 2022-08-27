@@ -24,6 +24,7 @@ MemberWorkspace _$MemberWorkspaceFromJson(Map<String, dynamic> json) =>
       json['balance'] as int?,
       json['user_id'] as String,
       Role.fromJson(json['role_workspace'] as Map<String, dynamic>),
+      (json['permissions'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$MemberWorkspaceToJson(MemberWorkspace instance) =>
@@ -40,4 +41,5 @@ Map<String, dynamic> _$MemberWorkspaceToJson(MemberWorkspace instance) =>
       'parents': instance.parents?.map((e) => e.toJson()).toList(),
       'parent': instance.parent?.toJson(),
       'balance': instance.balance,
+      'permissions': instance.permissions,
     };

@@ -330,6 +330,13 @@ class MainScreen extends StatelessWidget {
                     return ListTile(
                       leading: const Icon(Icons.people),
                       title: const Text('Anggota Area Kerja'),
+                      subtitle: Text(
+                        'Saldo: ${currencyFormatter.format(workspacesState.selected?.sumBalanceMember)}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       onTap: () {
                         ListMemberWidget(
                           label:

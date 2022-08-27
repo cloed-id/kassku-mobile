@@ -12,6 +12,7 @@ Workspace _$WorkspaceFromJson(Map<String, dynamic> json) => Workspace(
       DateTime.parse(json['updated_at'] as String),
       json['description'] as String?,
       json['name'] as String,
+      json['sum_balance_members'] as int?,
       User.fromJson(json['admin'] as Map<String, dynamic>),
       (json['members'] as List<dynamic>)
           .map((e) => MemberWorkspace.fromJson(e as Map<String, dynamic>))
@@ -19,6 +20,7 @@ Workspace _$WorkspaceFromJson(Map<String, dynamic> json) => Workspace(
       json['member_workspace_id'] as String,
       json['balance'] as num?,
       json['role'] as String?,
+      (json['permissions'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$WorkspaceToJson(Workspace instance) => <String, dynamic>{
@@ -27,9 +29,11 @@ Map<String, dynamic> _$WorkspaceToJson(Workspace instance) => <String, dynamic>{
       'description': instance.description,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
+      'sum_balance_members': instance.sumBalanceMember,
       'admin': instance.admin.toJson(),
       'members': instance.members.map((e) => e.toJson()).toList(),
       'member_workspace_id': instance.memberWorkspaceId,
       'balance': instance.balance,
       'role': instance.role,
+      'permissions': instance.permissions,
     };

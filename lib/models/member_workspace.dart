@@ -19,6 +19,7 @@ class MemberWorkspace {
     this.balance,
     this.userId,
     this.role,
+    this.permissions,
   );
 
   /// Converter from response map data to model
@@ -58,4 +59,6 @@ class MemberWorkspace {
   final User? parent;
 
   final int? balance;
+
+  final List<String> permissions;
 }
