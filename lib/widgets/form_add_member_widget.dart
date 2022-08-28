@@ -248,55 +248,68 @@ class _FormAddMemberBodyWidget extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    final role = context.read<_SelectedRoleCubit>().state;
-                    final workspace =
-                        context.read<WorkspacesBloc>().state.selected;
-                    final permissionIds =
-                        context.read<_SelectedPermissionsCubit>().state;
+              BlocBuilder<WorkspaceMemberByParentBloc,
+                  WorkspaceMemberByParentState>(
+                builder: (context, workspaceByParentState) {
+                  if (workspaceByParentState
+                      is WorkspaceMemberByParentLoading) {
+                    return const SizedBox(
+                      width: double.infinity,
+                      height: 35,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  return SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        final role = context.read<_SelectedRoleCubit>().state;
+                        final workspace =
+                            context.read<WorkspacesBloc>().state.selected;
+                        final permissionIds =
+                            context.read<_SelectedPermissionsCubit>().state;
 
-                    if (username.isEmpty) {
-                      GetIt.I<FlashMessageHelper>().showError(
-                        'Username tidak boleh kosong',
-                      );
-                      return;
-                    }
+                        if (username.isEmpty) {
+                          GetIt.I<FlashMessageHelper>().showError(
+                            'Username tidak boleh kosong',
+                          );
+                          return;
+                        }
 
-                    if (role == null) {
-                      GetIt.I<FlashMessageHelper>().showError(
-                        'Jenis anggota belum dipilih',
-                      );
-                      return;
-                    }
+                        if (role == null) {
+                          GetIt.I<FlashMessageHelper>().showError(
+                            'Jenis anggota belum dipilih',
+                          );
+                          return;
+                        }
 
-                    if (workspace == null) {
-                      GetIt.I<FlashMessageHelper>().showError(
-                        'Workspace belum dipilih',
-                      );
-                      return;
-                    }
+                        if (workspace == null) {
+                          GetIt.I<FlashMessageHelper>().showError(
+                            'Workspace belum dipilih',
+                          );
+                          return;
+                        }
 
-                    if (permissionIds.isEmpty &&
-                        (role == 'head' || role == 'finance')) {
-                      return GetIt.I<FlashMessageHelper>().showError(
-                        'Izin anggota belum dipilih',
-                      );
-                    }
+                        if (permissionIds.isEmpty &&
+                            (role == 'head' || role == 'finance')) {
+                          return GetIt.I<FlashMessageHelper>().showError(
+                            'Izin anggota belum dipilih',
+                          );
+                        }
 
-                    context.read<WorkspaceMemberByParentBloc>().add(
-                          CreateWorkspaceMemberByParent(
-                            username: username,
-                            role: role,
-                            workspaceId: workspace.id,
-                            permissionIds: permissionIds,
-                          ),
-                        );
-                  },
-                  child: const Text('Tambah anggota'),
-                ),
+                        context.read<WorkspaceMemberByParentBloc>().add(
+                              CreateWorkspaceMemberByParent(
+                                username: username,
+                                role: role,
+                                workspaceId: workspace.id,
+                                permissionIds: permissionIds,
+                              ),
+                            );
+                      },
+                      child: const Text('Tambah anggota'),
+                    ),
+                  );
+                },
               ),
             ],
           ),

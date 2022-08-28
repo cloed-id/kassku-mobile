@@ -36,16 +36,23 @@ class MainScreen extends StatelessWidget {
     final workspacesState = context.watch<WorkspacesBloc>().state;
 
     return BlocProvider(
-      create: (context) => TransactionsBloc()
-        ..add(
-          FetchTransactions(
-            workspacesState.selected!.id,
-            workspacesState.selected!.role == 'observer'
-                ? null
-                : workspacesState.selected!.memberWorkspaceId,
-            key: '',
-          ),
-        ),
+      create: (context) {
+        final bloc = TransactionsBloc();
+
+        if (workspacesState.selected != null) {
+          bloc.add(
+            FetchTransactions(
+              workspacesState.selected!.id,
+              workspacesState.selected!.role == 'observer'
+                  ? null
+                  : workspacesState.selected!.memberWorkspaceId,
+              key: '',
+            ),
+          );
+        }
+
+        return bloc;
+      },
       child: Scaffold(
         backgroundColor: ColorName.background,
         appBar: AppBar(
@@ -289,32 +296,42 @@ class MainScreen extends StatelessWidget {
                           }
                         },
                         builder: (context, workspaceMemberState) {
+                          final isLoading = workspaceMemberState
+                              is WorkspaceMemberByParentLoading;
                           return ListTile(
+                            subtitle: isLoading
+                                ? const LinearProgressIndicator()
+                                : null,
                             leading: const Icon(Icons.people_alt_outlined),
                             title: const Text('Anggota Anda'),
-                            onTap: () {
-                              final workspaceMemberByParentBloc =
-                                  BlocProvider.of<WorkspaceMemberByParentBloc>(
-                                context,
-                              );
-                              final workspacesBloc =
-                                  BlocProvider.of<WorkspacesBloc>(context);
-                              MultiBlocProvider(
-                                providers: [
-                                  BlocProvider.value(
-                                    value: workspaceMemberByParentBloc,
-                                  ),
-                                  BlocProvider.value(value: workspacesBloc)
-                                ],
-                                child: ListMemberWidget(
-                                  label: 'Anggota Anda',
-                                  members:
-                                      workspaceMemberState.memberWorkspaces,
-                                  workspace: workspacesState.selected!,
-                                  ableToSetBalance: true,
-                                ),
-                              ).showSheet<void>(context);
-                            },
+                            onTap: isLoading
+                                ? null
+                                : () {
+                                    final workspaceMemberByParentBloc =
+                                        BlocProvider.of<
+                                            WorkspaceMemberByParentBloc>(
+                                      context,
+                                    );
+                                    final workspacesBloc =
+                                        BlocProvider.of<WorkspacesBloc>(
+                                            context);
+                                    MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider.value(
+                                          value: workspaceMemberByParentBloc,
+                                        ),
+                                        BlocProvider.value(
+                                            value: workspacesBloc)
+                                      ],
+                                      child: ListMemberWidget(
+                                        label: 'Anggota Anda',
+                                        members: workspaceMemberState
+                                            .memberWorkspaces,
+                                        workspace: workspacesState.selected!,
+                                        ableToSetBalance: true,
+                                      ),
+                                    ).showSheet<void>(context);
+                                  },
                           );
                         },
                       ),
@@ -402,6 +419,20 @@ class MainScreen extends StatelessWidget {
         ),
         body: BlocConsumer<WorkspacesBloc, WorkspacesState>(
           listener: (context, state) {
+            if (state is WorkspacesLoaded) {
+              if (state.selected == null) {
+                return;
+              }
+
+              context.read<TransactionsBloc>().add(
+                    FetchTransactions(
+                      state.selected!.id,
+                      state.selected!.memberWorkspaceId,
+                      key: '',
+                    ),
+                  );
+            }
+
             if (state is WorkspacesCreated) {
               GetIt.I<FlashMessageHelper>()
                   .showTopFlash('Area kerja berhasil dibuat');
@@ -409,7 +440,9 @@ class MainScreen extends StatelessWidget {
                   .read<WorkspacesBloc>()
                   .add(const FetchWorkspaces(key: ''));
               Navigator.pop(context);
-            } else if (state is WorkspacesCalledTutorial) {
+            }
+
+            if (state is WorkspacesCalledTutorial) {
               Navigator.of(context)
                   .push(
                 MaterialPageRoute<void>(
@@ -420,14 +453,6 @@ class MainScreen extends StatelessWidget {
                 context
                     .read<WorkspacesBloc>()
                     .add(const FetchWorkspaces(key: ''));
-
-                context.read<TransactionsBloc>().add(
-                      FetchTransactions(
-                        workspacesState.selected!.id,
-                        workspacesState.selected!.memberWorkspaceId,
-                        key: '',
-                      ),
-                    );
               });
             }
           },

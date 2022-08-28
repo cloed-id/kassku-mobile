@@ -296,17 +296,32 @@ class _SetMemberBalanceDialog extends StatelessWidget {
                     onSetBalanceSuccess?.call();
                   }
                 },
-                child: TextButton(
-                  child: const Text('Simpan'),
-                  onPressed: () {
-                    final amount = context.read<_AmountCubit>().state;
-                    context.read<WorkspaceMemberByParentBloc>().add(
-                          SetBalanceWorkspaceMemberByParent(
-                            memberId: memberId,
-                            workspaceId: workspace.id,
-                            amount: amount,
-                          ),
-                        );
+                child: BlocBuilder<WorkspaceMemberByParentBloc,
+                    WorkspaceMemberByParentState>(
+                  builder: (context, state) {
+                    if (state is WorkspaceMemberByParentLoading) {
+                      return const SizedBox(
+                        width: 70,
+                        height: 35,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    return SizedBox(
+                      width: 70,
+                      child: TextButton(
+                        child: const Text('Simpan'),
+                        onPressed: () {
+                          final amount = context.read<_AmountCubit>().state;
+                          context.read<WorkspaceMemberByParentBloc>().add(
+                                SetBalanceWorkspaceMemberByParent(
+                                  memberId: memberId,
+                                  workspaceId: workspace.id,
+                                  amount: amount,
+                                ),
+                              );
+                        },
+                      ),
+                    );
                   },
                 ),
               ),

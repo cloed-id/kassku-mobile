@@ -168,6 +168,7 @@ class _TransactionItem extends StatelessWidget {
       title: Text(transaction.categoryName.capitalize),
       subtitle: Text(transaction.description.capitalize),
       trailing: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(currencyFormatterNoLeading.format(transaction.amount)),
           if (isWorkspaceTransaction)

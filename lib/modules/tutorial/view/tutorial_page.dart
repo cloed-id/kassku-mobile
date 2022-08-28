@@ -87,7 +87,7 @@ class _TutorialBodyWidget extends StatelessWidget {
           floatingActionButton: BlocBuilder<WorkspacesBloc, WorkspacesState>(
             builder: (context, state) {
               if (state.selected != null &&
-                  state.selected!.members.length == 3) {
+                  state.selected!.members.length >= 3) {
                 return FloatingActionButton(
                   child: const Icon(
                     Icons.check,

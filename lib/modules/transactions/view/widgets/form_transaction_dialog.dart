@@ -247,8 +247,11 @@ class _FormTransactionBodyDialogState
                     ],
                   );
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return const SizedBox(
+                  height: 32,
+                  child: Center(
+                    child: LinearProgressIndicator(),
+                  ),
                 );
               },
             ),
@@ -256,42 +259,54 @@ class _FormTransactionBodyDialogState
             SizedBox(
               width: double.infinity,
               child: BlocBuilder<_IsAddingCategoryCubit, bool>(
-                builder: (_, state) {
-                  return ElevatedButton(
-                    onPressed: state
-                        ? null
-                        : () {
-                            final type =
-                                context.read<_TransactionTypeCubit>().state;
-                            final category = context
-                                .read<CategoriesBloc>()
-                                .state
-                                .categories
-                                .firstWhere((element) => element.isSelected);
+                builder: (_, categoryState) {
+                  return BlocBuilder<TransactionsBloc, TransactionsState>(
+                    builder: (context, transactionState) {
+                      if (transactionState is TransactionsLoading) {
+                        return const SizedBox(
+                          width: 70,
+                          height: 35,
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+                      return ElevatedButton(
+                        onPressed: categoryState
+                            ? null
+                            : () {
+                                final type =
+                                    context.read<_TransactionTypeCubit>().state;
+                                final category = context
+                                    .read<CategoriesBloc>()
+                                    .state
+                                    .categories
+                                    .firstWhere(
+                                        (element) => element.isSelected);
 
-                            final amount = int.tryParse(_amount);
+                                final amount = int.tryParse(_amount);
 
-                            if (amount == null) {
-                              GetIt.I<FlashMessageHelper>()
-                                  .showError('Nominal tidak valid');
-                              return;
-                            }
+                                if (amount == null) {
+                                  GetIt.I<FlashMessageHelper>()
+                                      .showError('Nominal tidak valid');
+                                  return;
+                                }
 
-                            final workspace =
-                                context.read<WorkspacesBloc>().state;
+                                final workspace =
+                                    context.read<WorkspacesBloc>().state;
 
-                            context.read<TransactionsBloc>().add(
-                                  CreateTransactions(
-                                    workspace.selected!.id,
-                                    workspace.selected!.memberWorkspaceId,
-                                    category.id,
-                                    _description,
-                                    amount,
-                                    type,
-                                  ),
-                                );
-                          },
-                    child: const Text('Simpan'),
+                                context.read<TransactionsBloc>().add(
+                                      CreateTransactions(
+                                        workspace.selected!.id,
+                                        workspace.selected!.memberWorkspaceId,
+                                        category.id,
+                                        _description,
+                                        amount,
+                                        type,
+                                      ),
+                                    );
+                              },
+                        child: const Text('Simpan'),
+                      );
+                    },
                   );
                 },
               ),

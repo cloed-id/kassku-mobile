@@ -9,7 +9,6 @@ import 'package:kassku_mobile/models/workspace.dart';
 import 'package:kassku_mobile/repositories/workspaces_repository.dart';
 import 'package:kassku_mobile/services/hive_service.dart';
 import 'package:kassku_mobile/utils/wrappers/error_wrapper.dart';
-import 'package:logger/logger.dart';
 
 part 'workspaces_event.dart';
 part 'workspaces_state.dart';
@@ -95,9 +94,7 @@ class WorkspacesBloc extends Bloc<WorkspacesEvent, WorkspacesState> {
     );
 
     final isGoToTutorial = (data.isEmpty) ||
-        (selectedWorkspace != null &&
-            selectedWorkspace.members.length == 1 &&
-            data.length <= 2);
+        (selectedWorkspace != null && selectedWorkspace.members.length == 1);
 
     if (isGoToTutorial) {
       emit(WorkspacesCalledTutorial(data, selectedWorkspace));
