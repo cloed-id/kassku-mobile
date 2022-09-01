@@ -15,7 +15,7 @@ import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_pare
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_chart_widget.dart';
-import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_list_widget.dart';
+import 'package:kassku_mobile/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/modules/tutorial/view/tutorial_page.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';

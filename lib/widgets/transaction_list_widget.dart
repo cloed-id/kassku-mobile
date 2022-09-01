@@ -14,9 +14,11 @@ class TransactionsListWidget extends StatelessWidget {
   const TransactionsListWidget({
     super.key,
     this.isWorkspaceTransactions = false,
+    this.selectedMemberId,
   });
 
   final bool isWorkspaceTransactions;
+  final String? selectedMemberId;
 
   void _openTrxDialog(BuildContext context) {
     final workspaceBloc = BlocProvider.of<WorkspacesBloc>(context);
@@ -51,7 +53,7 @@ class TransactionsListWidget extends StatelessWidget {
     }
 
     final workspaceId = workspace.id;
-    final memberWorkspaceId = workspace.memberWorkspaceId;
+    final memberWorkspaceId = selectedMemberId ?? workspace.memberWorkspaceId;
 
     if (transactionState is TransactionsError) {
       return Center(
@@ -67,17 +69,20 @@ class TransactionsListWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Tidak ada transaksi,',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+              const Padding(
+                padding: EdgeInsets.only(right: 8),
+                child: Text(
+                  'Tidak ada transaksi',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () => _openTrxDialog(context),
-                child: const Text('silahkan buat'),
-              )
+              if (!isWorkspaceTransactions && selectedMemberId == null)
+                ElevatedButton(
+                  onPressed: () => _openTrxDialog(context),
+                  child: const Text('silahkan buat'),
+                )
             ],
           ),
         );
@@ -117,7 +122,23 @@ class TransactionsListWidget extends StatelessWidget {
                       ),
                     );
               },
-              child: list,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (selectedMemberId != null)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                      child: Text(
+                        'Mutasi saldo',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  Expanded(child: list),
+                ],
+              ),
             )
           else
             list,

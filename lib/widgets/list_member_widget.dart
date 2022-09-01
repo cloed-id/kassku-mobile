@@ -6,12 +6,14 @@ import 'package:kassku_mobile/gen/colors.gen.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
 import 'package:kassku_mobile/models/member_workspace.dart';
 import 'package:kassku_mobile/models/workspace.dart';
+import 'package:kassku_mobile/modules/transactions/bloc/transactions_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_parent_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 import 'package:kassku_mobile/utils/extensions/widget_extension.dart';
 import 'package:kassku_mobile/utils/functions.dart';
 import 'package:kassku_mobile/widgets/form_add_member_widget.dart';
+import 'package:kassku_mobile/widgets/transaction_list_widget.dart';
 
 class ListMemberWidget extends StatelessWidget {
   const ListMemberWidget({
@@ -71,6 +73,28 @@ class ListMemberWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onShowMutations(BuildContext context, String memberId) {
+    final workspacesBloc = BlocProvider.of<WorkspacesBloc>(
+      context,
+    );
+    MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: workspacesBloc),
+        BlocProvider(
+          create: (context) => TransactionsBloc()
+            ..add(
+              FetchTransactions(
+                workspacesBloc.state.selected!.id,
+                memberId,
+                key: '',
+              ),
+            ),
+        )
+      ],
+      child: TransactionsListWidget(selectedMemberId: memberId),
+    ).showSheet<void>(context);
   }
 
   @override
@@ -192,6 +216,12 @@ class ListMemberWidget extends StatelessWidget {
                               if (ableToSetBalance) {
                                 _onSetBalance(context, member.id);
                               }
+                              break;
+                            case 'mutations':
+                              if (ableToSetBalance) {
+                                _onShowMutations(context, member.id);
+                              }
+                              break;
                           }
                         },
                         icon: const Icon(Icons.more_vert),
@@ -205,6 +235,17 @@ class ListMemberWidget extends StatelessWidget {
                                     Icon(Icons.edit),
                                     SizedBox(width: 8),
                                     Text('Tambah Saldo'),
+                                  ],
+                                ),
+                              ),
+                            if (ableToSetBalance)
+                              PopupMenuItem<String>(
+                                value: 'mutations',
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.list_alt),
+                                    SizedBox(width: 8),
+                                    Text('Mutasi Saldo'),
                                   ],
                                 ),
                               ),
