@@ -1,7 +1,7 @@
 part of 'package:kassku_mobile/modules/transactions/view/main_screen.dart';
 
-class _TransactionTypeCubit extends Cubit<TransactionType> {
-  _TransactionTypeCubit() : super(TransactionType.income);
+class _TransactionTypeCubit extends Cubit<TransactionType?> {
+  _TransactionTypeCubit() : super(null);
 
   void changeTransactionType(TransactionType type) {
     emit(type);
@@ -116,7 +116,7 @@ class _FormTransactionBodyDialogState
               ),
             ),
             const SizedBox(height: 16),
-            BlocBuilder<_TransactionTypeCubit, TransactionType>(
+            BlocBuilder<_TransactionTypeCubit, TransactionType?>(
               builder: (context, state) {
                 return Row(
                   children: [
@@ -287,6 +287,13 @@ class _FormTransactionBodyDialogState
                                 if (amount == null) {
                                   GetIt.I<FlashMessageHelper>()
                                       .showError('Nominal tidak valid');
+                                  return;
+                                }
+
+                                if (type == null) {
+                                  GetIt.I<FlashMessageHelper>().showError(
+                                    'Silahkan pilih tipe transaksi',
+                                  );
                                   return;
                                 }
 
