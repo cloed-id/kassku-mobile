@@ -14,6 +14,7 @@ import 'package:kassku_mobile/modules/transactions/bloc/transactions_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_parent_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
+import 'package:kassku_mobile/modules/transactions/view/widgets/note_list_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_chart_widget.dart';
 import 'package:kassku_mobile/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/modules/tutorial/view/tutorial_page.dart';
@@ -400,6 +401,26 @@ class MainScreen extends StatelessWidget {
                           child: const TransactionsListWidget(
                             isWorkspaceTransactions: true,
                           ),
+                        ).showSheet<void>(context);
+                      },
+                    );
+                  }
+                  return const SizedBox();
+                },
+              ),
+              Builder(
+                builder: (context) {
+                  if (workspacesState is WorkspacesLoaded &&
+                      workspacesState.selected != null &&
+                      workspacesState.selected!.role != 'observer') {
+                    return ListTile(
+                      leading: const Icon(Icons.note_outlined),
+                      title: const Text('Catatan'),
+                      onTap: () {
+                        NoteListWidget(
+                          workspaceId: workspacesState.selected!.id,
+                          memberWorkspaceId:
+                              workspacesState.selected!.memberWorkspaceId,
                         ).showSheet<void>(context);
                       },
                     );

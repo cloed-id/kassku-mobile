@@ -13,4 +13,5 @@ class ApiEndPoint {
   static const kApiWorkspaces = '/v1/workspaces';
   static const kApiTransactions = '/transactions';
   static const kApiCategories = '/categories';
+  static const kApiNotes = '/notes';
 }

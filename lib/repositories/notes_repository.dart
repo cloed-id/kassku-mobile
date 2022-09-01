@@ -2,22 +2,23 @@ import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/base_response.dart';
 import 'package:kassku_mobile/models/category.dart';
+import 'package:kassku_mobile/models/note.dart';
 import 'package:kassku_mobile/repositories/base_repository.dart';
 import 'package:kassku_mobile/utils/constants.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/exceptions.dart';
 import 'package:kassku_mobile/utils/typedefs.dart';
 
-class CategoriesRepository extends BaseRepository {
-  Future<BaseResponse<List<Category>>> getCategories(
+class NotesRepository extends BaseRepository {
+  Future<BaseResponse<List<Note>>> getNotes(
     String key,
     String workspaceId,
+    String memberWorkspaceId,
   ) async {
     final response = await get(
-      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiCategories}',
+      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiNotes}',
       queryParameters: <String, String>{
-        // 'search_columns': 'name',
-        // 'search_key': key,
+        'member_workspace_id': memberWorkspaceId,
         'page': '1',
         'per_page': '10',
       },
@@ -25,37 +26,39 @@ class CategoriesRepository extends BaseRepository {
 
     final result = responseWrapper<List<MapString>, MapString>(response);
 
-    final categories = result.map(Category.fromJson).toList();
+    final notes = result.map(Note.fromJson).toList();
 
-    return BaseResponse.success(categories);
+    return BaseResponse.success(notes);
   }
 
-  Future<BaseResponse<Category>> createCategory(
-    String name,
+  Future<BaseResponse<Note>> createNote(
     String workspaceId,
+    String content,
+    String memberWorkspaceId,
   ) async {
     final lang = GetIt.I<UserHelper>().lang;
     final response = await post(
-      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiCategories}',
+      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiNotes}',
       data: <String, dynamic>{
-        'name': name,
+        'content': content,
+        'member_workspace_id': memberWorkspaceId,
         'lang': lang,
       },
     );
 
     final result = responseWrapper<MapString, MapString>(response);
 
-    final category = Category.fromJson(result);
+    final note = Note.fromJson(result);
 
-    return BaseResponse.success(category);
+    return BaseResponse.success(note);
   }
 
-  Future<void> deleteCategory(
-    String categoryId,
+  Future<void> deleteNote(
+    String noteId,
     String workspaceId,
   ) async {
     final response = await delete(
-      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiCategories}/$categoryId',
+      '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiNotes}/$noteId',
     );
 
     if (response.status == ResponseStatus.success) {

@@ -8,7 +8,6 @@ import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/message.dart';
 import 'package:kassku_mobile/models/meta.dart';
 import 'package:kassku_mobile/utils/enums.dart';
-import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 import 'package:kassku_mobile/utils/typedefs.dart';
 import 'package:logger/logger.dart';
 
@@ -113,12 +112,12 @@ class ResponseOfRequest<T> extends BaseResponse<T> {
       }
     }
 
-    if (data.containsKey('errors')) {
-      final errors = data['errors'] as MapString;
-      final code = errors['code'] as String;
+    // if (data.containsKey('errors')) {
+    //   final errors = data['errors'] as MapString;
+    //   final code = errors['code'] as String;
 
-      strMsg = code.replaceAll('_', ' ').capitalizeFirstOfEach;
-    }
+    //   strMsg = code.replaceAll('_', ' ').capitalizeFirstOfEach;
+    // }
 
     GetIt.I<FlashMessageHelper>().showError(strMsg);
 
