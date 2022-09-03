@@ -49,10 +49,12 @@ class OneSignalHelper {
   }
 
   Future<MapString> setExternalId(String externalId) {
+    return Future.value({});
     return OneSignal.shared.setExternalUserId(externalId);
   }
 
   Future<void> sendTag(String key, String value) {
+    return Future.value();
     return OneSignal.shared.sendTag(key, value);
   }
 
@@ -64,6 +66,7 @@ class OneSignalHelper {
     required String contentId,
     required String contentEn,
   }) async {
+    return;
     const api = 'https://onesignal.com/api/v1/notifications';
     final dio = GetIt.I<Dio>();
 
