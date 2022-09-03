@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
-const kBaseUrl = 'https://kassku-stg-api.cloed.id/api';
+const kBaseUrl = 'https://kassku-api.cloed.id/api';
 
 const kAccessToken = 'access_token';
 
