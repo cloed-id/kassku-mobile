@@ -3,8 +3,8 @@
 A new Flutter project.
 
 ## Build APK/aab
-> flutter build apk --flavor production -t lib/main.dart
-> flutter build appbundle --flavor production -t lib/main.dart
+> flutter build apk -t lib/main.dart
+> flutter build appbundle -t lib/main.dart
 
 ## Build Web
 > flutter build web --web-renderer html --release -t lib/main.dart
@@ -26,7 +26,3 @@ A new Flutter project.
 ## Check and upgrade dependencies
 > flutter pub outdated
 > flutter pub upgrade --major-versions
-
-## Mason Command
-> mason get
-> mason make transtrack_mobile_template --on-conflict overwrite && sh runme.sh
