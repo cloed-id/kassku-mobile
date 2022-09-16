@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_web_frame/flutter_web_frame.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kassku_mobile/app/cubit/app_cubit.dart';
@@ -113,15 +115,20 @@ class _AppBody extends StatelessWidget {
 
     final appRouter = GetIt.I<NavigationHelper>().goRouter;
 
-    return MaterialApp.router(
-      title: 'Kassku | Cloed.ID',
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      routeInformationProvider: appRouter.routeInformationProvider,
-      routeInformationParser: appRouter.routeInformationParser,
-      routerDelegate: appRouter.routerDelegate,
-      theme: theme,
+    return FlutterWebFrame(
+      maximumSize: const Size(475, 812),
+      enabled: kIsWeb,
+      backgroundColor: Colors.grey[100],
+      builder: (context) => MaterialApp.router(
+        title: 'Kassku | Cloed.ID',
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        routeInformationProvider: appRouter.routeInformationProvider,
+        routeInformationParser: appRouter.routeInformationParser,
+        routerDelegate: appRouter.routerDelegate,
+        theme: theme,
+      ),
     );
   }
 }
