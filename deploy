@@ -1,0 +1,1 @@
+flutter build web --web-renderer html --release -t lib/main.dart && firebase deploy --only hosting --token 1//0gj3z33mUJuBjCgYIARAAGBASNwF-L9Ir5Enqry2CsLt7Xphg_vsrQIEtGu3SJkKKE-skEvCC1s4mF5MlY6bIPoWzNKvWQbS8GLE
