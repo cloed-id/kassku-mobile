@@ -10,6 +10,15 @@
             "type": "dart"
         },
         {
+            "name": "kassku_web",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--web-port",
+                "8080",
+            ]
+        },
+        {
             "name": "kassku_mobile (profile mode)",
             "request": "launch",
             "type": "dart",

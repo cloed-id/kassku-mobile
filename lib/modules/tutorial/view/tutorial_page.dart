@@ -140,7 +140,7 @@ class _TutorialBodyWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 62),
                               SizedBox(
                                 width: double.infinity,
                                 child: Wrap(
