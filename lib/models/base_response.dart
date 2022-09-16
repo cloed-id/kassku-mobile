@@ -8,6 +8,7 @@ import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/message.dart';
 import 'package:kassku_mobile/models/meta.dart';
 import 'package:kassku_mobile/utils/enums.dart';
+import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 import 'package:kassku_mobile/utils/typedefs.dart';
 import 'package:logger/logger.dart';
 
@@ -112,6 +113,28 @@ class ResponseOfRequest<T> extends BaseResponse<T> {
       }
     }
 
+    if (data.containsKey('errors')) {
+      final errors = data['errors'] as MapString;
+
+      if (errors.containsKey('code')) {
+        strMsg = '$strMsg, ${(errors['code'] as String).replaceAll('_', ' ')}';
+      } else if (errors.isNotEmpty) {
+        final listErr = errors.values.first as List;
+        final firstErr = listErr.first as MapString;
+
+        var strParams = '';
+
+        if (firstErr.containsKey('params')) {
+          final paramsErr = firstErr['params'] as MapString;
+
+          strParams = '${paramsErr.keys.first} ${paramsErr.values.first}';
+        }
+
+        strMsg =
+            '$strMsg, ${errors.keys.first} ${firstErr.values.first} $strParams';
+      }
+    }
+
     // if (data.containsKey('errors')) {
     //   final errors = data['errors'] as MapString;
     //   final code = errors['code'] as String;
@@ -119,7 +142,9 @@ class ResponseOfRequest<T> extends BaseResponse<T> {
     //   strMsg = code.replaceAll('_', ' ').capitalizeFirstOfEach;
     // }
 
-    GetIt.I<FlashMessageHelper>().showError(strMsg);
+    if (strMsg != null) {
+      GetIt.I<FlashMessageHelper>().showError(strMsg.capitalize);
+    }
 
     return ResponseOfRequest(
       data: data,
