@@ -42,17 +42,29 @@ class FormWorkspaceWidget extends StatelessWidget {
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                if (name.isEmpty) {
-                  GetIt.I<FlashMessageHelper>().showError(
-                    'Area kerja tidak boleh kosong',
+            child: BlocBuilder<WorkspacesBloc, WorkspacesState>(
+              builder: (context, state) {
+                if (state is WorkspacesLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 }
+                
+                return ElevatedButton(
+                  onPressed: () {
+                    if (name.isEmpty) {
+                      GetIt.I<FlashMessageHelper>().showError(
+                        'Area kerja tidak boleh kosong',
+                      );
+                    }
 
-                context.read<WorkspacesBloc>().add(CreateWorkspace(name: name));
+                    context
+                        .read<WorkspacesBloc>()
+                        .add(CreateWorkspace(name: name));
+                  },
+                  child: const Text('Buat Area Kerja'),
+                );
               },
-              child: const Text('Buat Area Kerja'),
             ),
           ),
         ],
