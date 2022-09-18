@@ -332,6 +332,10 @@ class _SetMemberBalanceDialog extends StatelessWidget {
                             workspaceId: workspace.id,
                           ),
                         );
+
+                    context
+                        .read<WorkspacesBloc>()
+                        .add(const FetchWorkspaces(key: ''));
                     GetIt.I<FlashMessageHelper>()
                         .showTopFlash('Berhasil perbaharui saldo');
                     onSetBalanceSuccess?.call();
