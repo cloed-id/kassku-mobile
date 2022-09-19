@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/base_response.dart';
@@ -29,6 +30,8 @@ class WorkspacesRepository extends BaseRepository {
   }
 
   Future<BaseResponse<Workspace>> createWorkspace(String name) async {
+    await FirebaseAnalytics.instance.logEvent(name: 'create-workspace');
+
     final response = await post(
       ApiEndPoint.kApiWorkspaces,
       data: <String, dynamic>{
@@ -71,13 +74,24 @@ class WorkspacesRepository extends BaseRepository {
   }
 
   Future<void> setBalanceMember(
+    String? role,
+    String balanceType,
     String memberId,
     String workspaceId,
     int amount,
   ) async {
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'set-balance-member',
+      parameters: <String, dynamic>{
+        'role': role,
+        'balance_type': balanceType,
+      },
+    );
+
     final response = await put(
       '${ApiEndPoint.kApiWorkspaces}/$workspaceId/add-member-balance',
       queryParameters: <String, dynamic>{
+        'balance_type': balanceType,
         'amount': amount,
         'member_workspace_id': memberId,
       },
@@ -95,6 +109,14 @@ class WorkspacesRepository extends BaseRepository {
     String workspaceId,
     List<String> permissionIds,
   ) async {
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'add-member-to-workspace',
+      parameters: <String, dynamic>{
+        'role': role,
+        'permission_ids': permissionIds,
+      },
+    );
+
     final user = GetIt.I<UserHelper>().getUser();
 
     if (user == null) {

@@ -1,7 +1,7 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/base_response.dart';
-import 'package:kassku_mobile/models/category.dart';
 import 'package:kassku_mobile/models/note.dart';
 import 'package:kassku_mobile/repositories/base_repository.dart';
 import 'package:kassku_mobile/utils/constants.dart';
@@ -37,6 +37,14 @@ class NotesRepository extends BaseRepository {
     String memberWorkspaceId,
   ) async {
     final lang = GetIt.I<UserHelper>().lang;
+
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'create-note',
+      parameters: <String, dynamic>{
+        'lang': lang,
+      },
+    );
+
     final response = await post(
       '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiNotes}',
       data: <String, dynamic>{
@@ -57,6 +65,8 @@ class NotesRepository extends BaseRepository {
     String noteId,
     String workspaceId,
   ) async {
+    await FirebaseAnalytics.instance.logEvent(name: 'delete-note');
+
     final response = await delete(
       '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiNotes}/$noteId',
     );

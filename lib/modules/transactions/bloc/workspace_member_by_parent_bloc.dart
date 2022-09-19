@@ -63,6 +63,8 @@ class WorkspaceMemberByParentBloc
     emit(WorkspaceMemberByParentLoading(state));
     await ErrorWrapper.asyncGuard(
       () => _repo.setBalanceMember(
+        event.role,
+        event.balanceType,
         event.memberId,
         event.workspaceId,
         event.amount,

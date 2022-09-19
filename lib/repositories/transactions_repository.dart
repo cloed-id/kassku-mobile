@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/base_response.dart';
@@ -92,6 +93,14 @@ class TransactionsRepository extends BaseRepository {
     int amount,
     TransactionType type,
   ) async {
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'create-transaction',
+      parameters: <String, dynamic>{
+        'amount': amount,
+        'type': type.name,
+      },
+    );
+    
     final response = await post(
       '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiTransactions}',
       data: <String, dynamic>{

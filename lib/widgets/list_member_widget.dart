@@ -46,7 +46,11 @@ class ListMemberWidget extends StatelessWidget {
     ).showCustomDialog<void>(context);
   }
 
-  void _onSetBalance(BuildContext context, String memberId) {
+  void _onSetBalance(
+    BuildContext context,
+    String memberId,
+    String balanceType,
+  ) {
     final workspaceMemberByParentBloc =
         BlocProvider.of<WorkspaceMemberByParentBloc>(
       context,
@@ -67,6 +71,7 @@ class ListMemberWidget extends StatelessWidget {
           ),
         ],
         child: _SetMemberBalanceDialog(
+          balanceType: balanceType,
           workspace: workspace,
           memberId: memberId,
           onSetBalanceSuccess: onSetBalanceSuccess,
@@ -212,9 +217,14 @@ class ListMemberWidget extends StatelessWidget {
                       trailing: PopupMenuButton(
                         onSelected: (value) {
                           switch (value) {
-                            case 'set_amount':
+                            case 'set_add_amount':
                               if (ableToSetBalance) {
-                                _onSetBalance(context, member.id);
+                                _onSetBalance(context, member.id, 'ADD');
+                              }
+                              break;
+                            case 'set_subtract_amount':
+                              if (ableToSetBalance) {
+                                _onSetBalance(context, member.id, 'SUBTRACT');
                               }
                               break;
                             case 'mutations':
@@ -229,12 +239,23 @@ class ListMemberWidget extends StatelessWidget {
                           return [
                             if (ableToSetBalance)
                               PopupMenuItem<String>(
-                                value: 'set_amount',
+                                value: 'set_add_amount',
                                 child: Row(
                                   children: const [
-                                    Icon(Icons.edit),
+                                    Icon(Icons.add),
                                     SizedBox(width: 8),
                                     Text('Tambah Saldo'),
+                                  ],
+                                ),
+                              ),
+                            if (ableToSetBalance)
+                              PopupMenuItem<String>(
+                                value: 'set_subtract_amount',
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.remove),
+                                    SizedBox(width: 8),
+                                    Text('Kurangi Saldo'),
                                   ],
                                 ),
                               ),
@@ -252,9 +273,6 @@ class ListMemberWidget extends StatelessWidget {
                           ];
                         },
                       ),
-                      onTap: () => ableToSetBalance
-                          ? _onSetBalance(context, member.id)
-                          : null,
                     ),
                   ),
                 );
@@ -281,11 +299,13 @@ class _SetMemberBalanceDialog extends StatelessWidget {
     required this.workspace,
     required this.memberId,
     required this.onSetBalanceSuccess,
+    required this.balanceType,
   });
 
   final Workspace workspace;
   final String memberId;
   final VoidCallback? onSetBalanceSuccess;
+  final String balanceType;
 
   @override
   Widget build(BuildContext context) {
@@ -294,7 +314,9 @@ class _SetMemberBalanceDialog extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return AlertDialog(
-            title: const Text('Tambah saldo anggota'),
+            title: balanceType == 'ADD'
+                ? const Text('Tambah saldo anggota')
+                : const Text('Kurangi saldo anggota'),
             content: TextFormField(
               keyboardType: TextInputType.number,
               autofocus: true,
@@ -359,6 +381,8 @@ class _SetMemberBalanceDialog extends StatelessWidget {
                           final amount = context.read<_AmountCubit>().state;
                           context.read<WorkspaceMemberByParentBloc>().add(
                                 SetBalanceWorkspaceMemberByParent(
+                                  role: workspace.role,
+                                  balanceType: balanceType,
                                   memberId: memberId,
                                   workspaceId: workspace.id,
                                   amount: amount,

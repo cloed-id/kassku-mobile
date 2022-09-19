@@ -19,11 +19,15 @@ class FetchWorkspaceMemberByParent extends WorkspaceMemberByParentEvent {
 
 class SetBalanceWorkspaceMemberByParent extends WorkspaceMemberByParentEvent {
   const SetBalanceWorkspaceMemberByParent({
+    required this.role,
+    required this.balanceType,
     required this.workspaceId,
     required this.memberId,
     required this.amount,
   });
 
+  final String? role;
+  final String balanceType;
   final String workspaceId;
   final String memberId;
   final int amount;
