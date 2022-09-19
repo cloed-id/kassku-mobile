@@ -71,6 +71,7 @@ class WorkspacesRepository extends BaseRepository {
   }
 
   Future<void> setBalanceMember(
+    String balanceType,
     String memberId,
     String workspaceId,
     int amount,
@@ -78,6 +79,7 @@ class WorkspacesRepository extends BaseRepository {
     final response = await put(
       '${ApiEndPoint.kApiWorkspaces}/$workspaceId/add-member-balance',
       queryParameters: <String, dynamic>{
+        'balance_type': balanceType,
         'amount': amount,
         'member_workspace_id': memberId,
       },

@@ -293,7 +293,6 @@ class MainScreen extends StatelessWidget {
                                 );
                             Navigator.of(context).pop();
                             Navigator.of(context).pop();
-                            Navigator.of(context).pop();
                           }
                         },
                         builder: (context, workspaceMemberState) {
