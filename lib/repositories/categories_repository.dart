@@ -1,5 +1,5 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get_it/get_it.dart';
+import 'package:kassku_mobile/helpers/analytics_helper.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/base_response.dart';
 import 'package:kassku_mobile/models/category.dart';
@@ -35,7 +35,7 @@ class CategoriesRepository extends BaseRepository {
     String name,
     String workspaceId,
   ) async {
-    await FirebaseAnalytics.instance.logEvent(name: 'create-category');
+    await AnalyticsHelper.logEvent(name: 'create_category');
 
     final lang = GetIt.I<UserHelper>().lang;
     final response = await post(
@@ -57,7 +57,7 @@ class CategoriesRepository extends BaseRepository {
     String categoryId,
     String workspaceId,
   ) async {
-    await FirebaseAnalytics.instance.logEvent(name: 'delete-category');
+    await AnalyticsHelper.logEvent(name: 'delete_category');
 
     final response = await delete(
       '${ApiEndPoint.kApiWorkspaces}/$workspaceId/${ApiEndPoint.kApiCategories}/$categoryId',

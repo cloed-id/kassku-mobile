@@ -31,6 +31,7 @@ dependencies:
   easy_localization: ^3.0.1
   equatable: ^2.0.3
   firebase_analytics: ^9.3.5
+  firebase_analytics_web: ^0.4.2+4
   firebase_core: ^1.22.0
   fl_chart: ^0.55.1
   flash: ^2.0.3+3

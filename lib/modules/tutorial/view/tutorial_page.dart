@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:kassku_mobile/helpers/analytics_helper.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/modules/transactions/bloc/workspace_member_by_parent_bloc.dart';
@@ -35,7 +36,7 @@ class _TutorialBodyWidgetState extends State<_TutorialBodyWidget> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics.instance.logTutorialBegin();
+    AnalyticsHelper.logTutorialBegin();
   }
 
   @override
@@ -106,7 +107,7 @@ class _TutorialBodyWidgetState extends State<_TutorialBodyWidget> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    FirebaseAnalytics.instance.logTutorialComplete();
+                    AnalyticsHelper.logTutorialComplete();
                     Navigator.of(context).pop();
                   },
                 );
