@@ -381,6 +381,7 @@ class _SetMemberBalanceDialog extends StatelessWidget {
                           final amount = context.read<_AmountCubit>().state;
                           context.read<WorkspaceMemberByParentBloc>().add(
                                 SetBalanceWorkspaceMemberByParent(
+                                  role: workspace.role,
                                   balanceType: balanceType,
                                   memberId: memberId,
                                   workspaceId: workspace.id,

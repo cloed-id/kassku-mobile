@@ -1,5 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -161,6 +162,12 @@ class MainScreen extends StatelessWidget {
                                       color: ColorName.white,
                                     ),
                                     onPressed: () {
+                                      FirebaseAnalytics.instance.logEvent(
+                                        name: 'add-new-workspaces',
+                                        parameters: {
+                                          'role': workspacesState.selected!.role
+                                        },
+                                      );
                                       final workspaceBloc =
                                           context.read<WorkspacesBloc>();
                                       BlocProvider.value(
@@ -233,6 +240,12 @@ class MainScreen extends StatelessWidget {
                         leading: const Icon(Icons.bar_chart),
                         title: const Text('Grafik Transaksi'),
                         onTap: () {
+                          FirebaseAnalytics.instance.logEvent(
+                            name: 'open-menu-chart-transactions',
+                            parameters: {
+                              'role': workspacesState.selected!.role
+                            },
+                          );
                           TransactionChartWidget(
                             workspaceId: workspacesState.selected!.id,
                           ).showSheet<void>(context);
@@ -252,6 +265,12 @@ class MainScreen extends StatelessWidget {
                         leading: const Icon(Icons.category),
                         title: const Text('Kategori'),
                         onTap: () {
+                          FirebaseAnalytics.instance.logEvent(
+                            name: 'open-menu-categories',
+                            parameters: {
+                              'role': workspacesState.selected!.role
+                            },
+                          );
                           CategoryListWidget(
                             workspaceId: workspacesState.selected!.id,
                           ).showSheet<void>(context);
@@ -307,6 +326,12 @@ class MainScreen extends StatelessWidget {
                             onTap: isLoading
                                 ? null
                                 : () {
+                                    FirebaseAnalytics.instance.logEvent(
+                                      name: 'open-menu-my-member',
+                                      parameters: {
+                                        'role': workspacesState.selected!.role
+                                      },
+                                    );
                                     final workspaceMemberByParentBloc =
                                         BlocProvider.of<
                                             WorkspaceMemberByParentBloc>(
@@ -314,14 +339,16 @@ class MainScreen extends StatelessWidget {
                                     );
                                     final workspacesBloc =
                                         BlocProvider.of<WorkspacesBloc>(
-                                            context);
+                                      context,
+                                    );
                                     MultiBlocProvider(
                                       providers: [
                                         BlocProvider.value(
                                           value: workspaceMemberByParentBloc,
                                         ),
                                         BlocProvider.value(
-                                            value: workspacesBloc)
+                                          value: workspacesBloc,
+                                        )
                                       ],
                                       child: ListMemberWidget(
                                         label: 'Anggota Anda',
@@ -355,6 +382,11 @@ class MainScreen extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
+                        FirebaseAnalytics.instance.logEvent(
+                          name: 'open-menu-workspace-member',
+                          parameters: {'role': workspacesState.selected!.role},
+                        );
+
                         ListMemberWidget(
                           label:
                               'Anggota Area Kerja ${workspacesState.selected!.name.capitalizeFirstOfEach}',
@@ -381,6 +413,10 @@ class MainScreen extends StatelessWidget {
                       leading: const Icon(Icons.list_alt),
                       title: const Text('Transaksi Anggota'),
                       onTap: () {
+                        FirebaseAnalytics.instance.logEvent(
+                          name: 'open-menu-transactions-member',
+                          parameters: {'role': workspacesState.selected!.role},
+                        );
                         MultiBlocProvider(
                           providers: [
                             BlocProvider(
@@ -416,6 +452,10 @@ class MainScreen extends StatelessWidget {
                       leading: const Icon(Icons.note_outlined),
                       title: const Text('Catatan'),
                       onTap: () {
+                        FirebaseAnalytics.instance.logEvent(
+                          name: 'open-menu-notes',
+                          parameters: {'role': workspacesState.selected!.role},
+                        );
                         NoteListWidget(
                           workspaceId: workspacesState.selected!.id,
                           memberWorkspaceId:
@@ -431,6 +471,10 @@ class MainScreen extends StatelessWidget {
                 leading: const Icon(Icons.logout),
                 title: const Text('Logout'),
                 onTap: () {
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'select-menu-logout',
+                    parameters: {'role': workspacesState.selected!.role},
+                  );
                   GetIt.I<UserHelper>().logout();
                 },
               ),
