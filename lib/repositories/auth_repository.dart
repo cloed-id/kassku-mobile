@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:kassku_mobile/helpers/analytics_helper.dart';
 import 'package:kassku_mobile/helpers/one_signal_helper.dart';
 import 'package:kassku_mobile/models/base_response.dart';
 import 'package:kassku_mobile/models/user.dart';
@@ -32,9 +33,8 @@ class AuthRepository extends BaseRepository {
       final user = User.fromJson(rawData);
       GetIt.I<HiveService>().storeUser(user);
 
-      await FirebaseAnalytics.instance.setUserId(id: user.id);
-      await FirebaseAnalytics.instance
-          .logLogin(loginMethod: 'username/password');
+      await AnalyticsHelper.setUserId(id: user.id);
+      await AnalyticsHelper.logLogin(loginMethod: 'username/password');
 
       await GetIt.I<OneSignalHelper>().setExternalId(user.id);
 
@@ -67,9 +67,8 @@ class AuthRepository extends BaseRepository {
       final user = User.fromJson(rawData);
       GetIt.I<HiveService>().storeUser(user);
 
-      await FirebaseAnalytics.instance.setUserId(id: user.id);
-      await FirebaseAnalytics.instance
-          .logSignUp(signUpMethod: 'username/password');
+      await AnalyticsHelper.setUserId(id: user.id);
+      await AnalyticsHelper.logSignUp(signUpMethod: 'username/password');
 
       await GetIt.I<OneSignalHelper>().setExternalId(user.id);
 

@@ -7,12 +7,13 @@ import 'package:kassku_mobile/app/app_bloc_observer.dart';
 import 'package:kassku_mobile/firebase_options.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
   BlocOverrides.runZoned(
     () => runApp(
       EasyLocalization(

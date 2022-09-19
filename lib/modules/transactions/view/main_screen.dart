@@ -1,11 +1,11 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kassku_mobile/gen/colors.gen.dart';
+import 'package:kassku_mobile/helpers/analytics_helper.dart';
 import 'package:kassku_mobile/helpers/flash_message_helper.dart';
 import 'package:kassku_mobile/helpers/user_helper.dart';
 import 'package:kassku_mobile/models/category.dart';
@@ -17,8 +17,8 @@ import 'package:kassku_mobile/modules/transactions/bloc/workspaces_bloc.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/category_list_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/note_list_widget.dart';
 import 'package:kassku_mobile/modules/transactions/view/widgets/transaction_chart_widget.dart';
-import 'package:kassku_mobile/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/modules/tutorial/view/tutorial_page.dart';
+import 'package:kassku_mobile/widgets/transaction_list_widget.dart';
 import 'package:kassku_mobile/utils/enums.dart';
 import 'package:kassku_mobile/utils/extensions/string_extension.dart';
 import 'package:kassku_mobile/utils/extensions/widget_extension.dart';
@@ -162,8 +162,8 @@ class MainScreen extends StatelessWidget {
                                       color: ColorName.white,
                                     ),
                                     onPressed: () {
-                                      FirebaseAnalytics.instance.logEvent(
-                                        name: 'add-new-workspaces',
+                                      AnalyticsHelper.logEvent(
+                                        name: 'add_new_workspaces',
                                         parameters: {
                                           'role': workspacesState.selected!.role
                                         },
@@ -240,8 +240,8 @@ class MainScreen extends StatelessWidget {
                         leading: const Icon(Icons.bar_chart),
                         title: const Text('Grafik Transaksi'),
                         onTap: () {
-                          FirebaseAnalytics.instance.logEvent(
-                            name: 'open-menu-chart-transactions',
+                          AnalyticsHelper.logEvent(
+                            name: 'open_menu_chart_transactions',
                             parameters: {
                               'role': workspacesState.selected!.role
                             },
@@ -265,8 +265,8 @@ class MainScreen extends StatelessWidget {
                         leading: const Icon(Icons.category),
                         title: const Text('Kategori'),
                         onTap: () {
-                          FirebaseAnalytics.instance.logEvent(
-                            name: 'open-menu-categories',
+                          AnalyticsHelper.logEvent(
+                            name: 'open_menu_categories',
                             parameters: {
                               'role': workspacesState.selected!.role
                             },
@@ -326,8 +326,8 @@ class MainScreen extends StatelessWidget {
                             onTap: isLoading
                                 ? null
                                 : () {
-                                    FirebaseAnalytics.instance.logEvent(
-                                      name: 'open-menu-my-member',
+                                    AnalyticsHelper.logEvent(
+                                      name: 'open_menu_my_member',
                                       parameters: {
                                         'role': workspacesState.selected!.role
                                       },
@@ -382,8 +382,8 @@ class MainScreen extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        FirebaseAnalytics.instance.logEvent(
-                          name: 'open-menu-workspace-member',
+                        AnalyticsHelper.logEvent(
+                          name: 'open_menu_workspace_member',
                           parameters: {'role': workspacesState.selected!.role},
                         );
 
@@ -413,8 +413,8 @@ class MainScreen extends StatelessWidget {
                       leading: const Icon(Icons.list_alt),
                       title: const Text('Transaksi Anggota'),
                       onTap: () {
-                        FirebaseAnalytics.instance.logEvent(
-                          name: 'open-menu-transactions-member',
+                        AnalyticsHelper.logEvent(
+                          name: 'open_menu_transactions_member',
                           parameters: {'role': workspacesState.selected!.role},
                         );
                         MultiBlocProvider(
@@ -452,8 +452,8 @@ class MainScreen extends StatelessWidget {
                       leading: const Icon(Icons.note_outlined),
                       title: const Text('Catatan'),
                       onTap: () {
-                        FirebaseAnalytics.instance.logEvent(
-                          name: 'open-menu-notes',
+                        AnalyticsHelper.logEvent(
+                          name: 'open_menu_notes',
                           parameters: {'role': workspacesState.selected!.role},
                         );
                         NoteListWidget(
@@ -471,8 +471,8 @@ class MainScreen extends StatelessWidget {
                 leading: const Icon(Icons.logout),
                 title: const Text('Logout'),
                 onTap: () {
-                  FirebaseAnalytics.instance.logEvent(
-                    name: 'select-menu-logout',
+                  AnalyticsHelper.logEvent(
+                    name: 'select_menu_logout',
                     parameters: {'role': workspacesState.selected!.role},
                   );
                   GetIt.I<UserHelper>().logout();
